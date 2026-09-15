@@ -1,5 +1,5 @@
 #!/bin/bash
-# 金門大學校務系統 MVP 假資料一鍵執行
+# 校務系統 MVP 假資料一鍵執行
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

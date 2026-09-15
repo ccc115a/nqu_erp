@@ -1,3 +1,4 @@
+/* Tailwind 三層指令：base（reset）、components、utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

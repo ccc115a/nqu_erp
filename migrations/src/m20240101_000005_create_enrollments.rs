@@ -1,3 +1,7 @@
+//! Migration 0005：建立選課紀錄（enrollments）表。
+//!
+//! 唯一索引 (student_id, course_id) 保證同一學生對同一課程只有一筆紀錄。
+
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::pk_auto;
 
@@ -6,6 +10,7 @@ pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    /// 建立表格：status 預設 ENROLLED，並建唯一＋查詢索引
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -33,6 +38,7 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        // 同一學生同一課程僅一筆（含已退選），避免重複選課爭議
         manager
             .create_index(
                 Index::create()
@@ -45,6 +51,7 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        // 依學生＋狀態查課表／成績是頻繁路徑
         manager
             .create_index(
                 Index::create()
@@ -57,6 +64,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
+    /// 反向：依序刪索引再刪表
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_index(Index::drop().name("uniq_student_course").to_owned())

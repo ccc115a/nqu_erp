@@ -1,3 +1,4 @@
+// 教師授課清單頁：列出教師自己的課程，可點入登錄成績。
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, getErrorMessage } from '../api/client'
@@ -41,6 +42,7 @@ export default function TeacherCourses() {
                   : '時段未定'}
               </div>
             </div>
+            {/* 前往該課程的成績登錄頁 */}
             <Link
               to={`/teacher/courses/${c.course_id}`}
               className="rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"

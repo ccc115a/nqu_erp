@@ -1,3 +1,5 @@
+// Vite / Vitest 設定：React 外掛，測試環境為 jsdom，僅收錄 `src/__tests__` 下的測試。
+
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 

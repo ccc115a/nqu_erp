@@ -1,2 +1,107 @@
-# nqu_erp
-大學校務系統
+# NQU-ERP 校務系統
+
+通用校務系統 MVP，聚焦**選課與成績管理**核心流程，涵蓋學生 / 教師 / 管理員三角色。目前版本 **v0.3.1**（管理員可修改 / 刪除帳號與課程）。
+
+## 技術堆疊
+
+| 層級 | 技術 |
+|------|------|
+| 後端 | Rust（Axum + SeaORM v2 + JWT + bcrypt） |
+| 前端 | React + TypeScript + TailwindCSS + Vite |
+| 資料庫 | SQLite（開發）/ PostgreSQL（生產），靠 `DATABASE_URL` 切換 |
+| 測試 | Rust 整合測試（test.sh）、Vitest、Playwright E2E |
+
+## 安裝與啟動
+
+需求：Rust toolchain、Node.js（+ Python3 與 `sqlite3` 用於 seed）、`bcrypt` Python 套件。
+
+```bash
+# 1. 在專案根目錄建立 .env（內容見下方）
+
+# 2. 啟動後端（自動跑 migration，監聽 0.0.0.0:8080）
+cargo run
+
+# 3. 插入假資料（另一 terminal）
+python3 scripts/seed.py -o scripts/seed.sql --seed 42
+sqlite3 dev.db < scripts/seed.sql
+
+# 4. 啟動前端（http://localhost:5173）
+cd frontend && npm install && npm run dev
+```
+
+或使用 `./run.sh` 一鍵完成：建置後端 → 重置 DB → seed → 啟動前後端（Ctrl+C 停止）。
+
+`.env`：
+
+```
+DATABASE_URL=sqlite://dev.db?mode=rwc
+JWT_SECRET=nqu-erp-secret-key-change-in-production
+SERVER_ADDR=0.0.0.0:8080
+```
+
+切換 PostgreSQL 只需改 `DATABASE_URL=postgres://user:pass@localhost:5432/nqu_db`，程式碼零修改。
+
+## 測試帳號
+
+| 角色 | 帳號 | 密碼 |
+|------|------|------|
+| 學生 | `11303001` | `student123` |
+| 教師 | `T001` | `teacher123` |
+| 管理員 | `admin` | `admin123` |
+
+## 功能一覽
+
+- **學生端**：課程查詢、加選 / 退選（衝堂與名額檢查）、個人週課表、歷年成績
+- **教師端**：授課清單、課程學生名冊、期中 / 期末成績登錄與鎖定送交
+- **管理員端**：帳號與課程的建立 / 修改 / 刪除（含防刪保護）、教師與科系列表
+
+## 測試
+
+```bash
+bash test.sh              # 後端整合測試：build → server → seed → API（72 tests）
+cargo test                # Rust 單元測試（目前為空）
+
+cd frontend
+bash test.sh              # build → seed → Vitest（26）→ Playwright E2E（10）
+npm test                  # 僅 Vitest（jsdom）
+npx playwright test       # 僅 E2E
+```
+
+## API 概覽
+
+前綴 `/api/v1`，認證用 `Authorization: Bearer <JWT>`。
+
+| Method | Path | 角色 |
+|--------|------|------|
+| POST | `/auth/login` | 全部 |
+| GET | `/courses` | 全部 |
+| POST / DELETE | `/enrollments` | 學生 |
+| GET | `/students/me/schedule`, `/students/me/grades` | 學生 |
+| GET | `/teachers/me/courses`, `/teachers/me/courses/{id}/students` | 教師 |
+| PUT | `/grades/batch`（登錄）/ POST `/grades/submit`（鎖定） | 教師 |
+| GET/POST/PUT/DELETE | `/admin/users`、`/admin/courses` | 管理員 |
+| GET | `/admin/teachers`, `/admin/departments` | 管理員 |
+
+成功回傳 `{ "success": true, "message": "..." }`，錯誤回傳 `{ "error": "中文錯誤訊息" }`。
+
+## 專案結構
+
+```
+src/
+├── main.rs              # 啟動入口、Router、AppState、CORS
+├── config.rs / db.rs    # 環境變數、DB 連線與 migration
+├── errors.rs            # AppError（HTTP status + 訊息）
+├── entities/            # SeaORM entity（手動撰寫，非 CLI 產生）
+├── handlers/            # auth / course / enrollment / grade / admin
+└── middleware/          # AuthUser extractor + JWT
+migrations/              # SeaORM migration（6 tables + 3 indexes）
+scripts/                 # seed.py（假資料產生器）+ seed.sql
+frontend/
+├── src/pages/           # Login / CourseList / MySchedule / MyGrades / TeacherCourses / TeacherGradeEntry / AdminUsers / AdminCourses
+├── src/components/      # Navbar / PrivateRoute / WeeklySchedule / GradeTable / RosterTable / UserForm / CourseForm
+├── src/__tests__/       # Vitest 單元測試
+└── e2e/                 # Playwright E2E
+_doc/                    # plan.md + 各版本說明（v0.1 / v0.2 / v0.3 / v0.3.1）
+```
+
+詳細規畫與 API 設計見 `_doc/plan.md`，版本說明見各 `_doc/vX.Y.md`。

@@ -1,3 +1,5 @@
+//! Migration 0001：建立科系（departments）表。
+
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::pk_auto;
 
@@ -6,6 +8,7 @@ pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    /// 建立表格（dept_id 自增主鍵、dept_code 唯一）
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -20,6 +23,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
+    /// 反向：刪除表格
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_table(Table::drop().table(Departments::Table).to_owned())

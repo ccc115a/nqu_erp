@@ -1,7 +1,9 @@
+// 頂部導覽列：依角色顯示不同連結，未登入不顯示。
 import { Link, useNavigate } from 'react-router-dom'
 import { getUser, isLoggedIn, logout } from '../api/client'
 import type { LoginResponse, Role } from '../types'
 
+// 各角色的導覽連結
 const NAV_LINKS: Record<Role, { to: string; label: string }[]> = {
   STUDENT: [
     { to: '/courses', label: '課程瀏覽' },
@@ -19,6 +21,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const user = getUser<LoginResponse>()
 
+  // 未登入就不渲染導覽列
   if (!isLoggedIn() || !user) return null
 
   const handleLogout = () => {
@@ -29,8 +32,9 @@ export default function Navbar() {
   return (
     <nav className="bg-blue-700 text-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <span className="font-bold">NQU 選課系統</span>
+        <span className="font-bold">選課系統</span>
         <div className="flex items-center gap-4">
+          {/* 依目前角色渲染對應的連結 */}
           {NAV_LINKS[user.role].map((l) => (
             <Link key={l.to} className="hover:underline" to={l.to}>
               {l.label}

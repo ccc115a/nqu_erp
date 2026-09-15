@@ -1,6 +1,8 @@
+// 帳號表單元件：新增／編輯模式共用；編輯模式鎖定帳號、密碼可選填。
 import { FormEvent, useEffect, useState } from 'react'
 import type { Department, Role } from '../types'
 
+// 提交給上層的帳號資料
 export interface UserFormValues {
   username: string
   password: string
@@ -25,6 +27,7 @@ export default function UserForm({ departments, onSubmit, submitting = false, in
   const [deptId, setDeptId] = useState(initial?.dept_id ?? departments[0]?.dept_id ?? 1)
   const [email, setEmail] = useState(initial?.email ?? '')
 
+  // initial 改變（如切換要編輯的帳號）時重新填入欄位
   useEffect(() => {
     setUsername(initial?.username ?? '')
     setPassword('')
@@ -34,11 +37,13 @@ export default function UserForm({ departments, onSubmit, submitting = false, in
     setEmail(initial?.email ?? '')
   }, [initial, departments])
 
+  // 有 initial 即為編輯模式
   const editing = Boolean(initial)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     onSubmit({ username, password, full_name: fullName, role, dept_id: deptId, email })
+    // 新增成功後清空表單（編輯模式保留內容）
     if (!editing) {
       setUsername('')
       setPassword('')
@@ -73,6 +78,7 @@ export default function UserForm({ departments, onSubmit, submitting = false, in
         </div>
         <div>
           <label className="mb-1 block text-sm text-gray-600">密碼</label>
+          {/* 編輯模式可不填密碼，代表不修改 */}
           <input
             className="w-full rounded border px-3 py-2 text-sm"
             type="password"

@@ -1,3 +1,4 @@
+// 學生成績表格元件：依送交狀態顯示綠色「已送交」或灰色「未送交」標籤。
 import type { Grade } from '../types'
 
 export default function GradeTable({ grades }: { grades: Grade[] }) {
@@ -21,6 +22,7 @@ export default function GradeTable({ grades }: { grades: Grade[] }) {
             <td className="border border-gray-300 px-3 py-2">{g.course_code}</td>
             <td className="border border-gray-300 px-3 py-2">{g.course_name}</td>
             <td className="border border-gray-300 px-3 py-2">{g.credits}</td>
+            {/* 未登錄的成績以 - 顯示 */}
             <td className="border border-gray-300 px-3 py-2">{g.midterm_score ?? '-'}</td>
             <td className="border border-gray-300 px-3 py-2">{g.final_score ?? '-'}</td>
             <td className="border border-gray-300 px-3 py-2">{g.total_score?.toFixed(1) ?? '-'}</td>

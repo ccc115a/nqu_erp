@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-金門大學校務系統 MVP 假資料產生器
+校務系統 MVP 假資料產生器
 產出 SQL INSERT 檔案，可塞入 SQLite 或 PostgreSQL
 """
 
@@ -104,8 +104,9 @@ def simple_hash(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def generate_sql():
+    """依上面定義的固定資料與隨機參數產生完整 SQL（INSERT 順序與外鍵依賴一致）"""
     lines = []
-    lines.append("-- 金門大學校務系統 MVP 假資料")
+    lines.append("-- 校務系統 MVP 假資料")
     lines.append(f"-- 產生時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append("")
 
@@ -161,6 +162,7 @@ def generate_sql():
 
     course_records = []
     for i, (code, name, dept_code, credits) in enumerate(COURSES, 1):
+        # 指派同科系的教師授課，容量隨機 30~60
         dept_teachers = [t for t in TEACHERS if t[2] == dept_code]
         teacher = random.choice(dept_teachers)
         teacher_id = teacher_map[teacher[0]]
@@ -182,6 +184,7 @@ def generate_sql():
         used_times = set()
         schedules = []
         for _ in range(num_schedules):
+            # 挑與本身其他時段不重疊的模板，避免同課程內時間衝突
             available = [s for s in SCHEDULE_TEMPLATES
                         if (s[0], s[1]) not in used_times and (s[0], s[2]) not in used_times]
             if not available:
@@ -218,6 +221,7 @@ def generate_sql():
             if not available_courses:
                 break
 
+            # 隨機洗牌後挑第一門不與既有課表衝突的課程，確保不撞堂
             random.shuffle(available_courses)
             chosen = None
             for cid in available_courses:
@@ -234,11 +238,13 @@ def generate_sql():
             if chosen:
                 selected.append(chosen)
                 available_courses.remove(chosen)
+                # 記錄這門課已佔用全部節次，供後續課程判別衝突
                 for day, start, end, _ in course_schedules.get(chosen, []):
                     for p in range(start, end + 1):
                         enrolled_times.add((day, p))
 
         for course_id in selected:
+            # 少數課程設為已退選，測試退選狀態的呈現
             status = "ENROLLED" if random.random() > 0.1 else "DROPPED"
             lines.append(
                 f"INSERT INTO enrollments (enrollment_id, student_id, course_id, status) "
@@ -252,9 +258,11 @@ def generate_sql():
     lines.append("-- 成績資料")
     grade_id = 1
     for enr_id, student_id, course_id, status in enrollment_records:
+        # 期中/期末隨機分數，總成績為 40% 期中 + 60% 期末
         midterm = round(random.uniform(50.0, 98.0), 2)
         final = round(random.uniform(45.0, 100.0), 2)
         total = round(midterm * 0.4 + final * 0.6, 2)
+        # 約七成成績已鎖定送交，其餘保持未送交供教師端測試
         submitted = "TRUE" if random.random() > 0.3 else "FALSE"
         lines.append(
             f"INSERT INTO grades (grade_id, enrollment_id, midterm_score, final_score, total_score, is_submitted) "
@@ -278,7 +286,8 @@ def generate_sql():
     return "\n".join(lines)
 
 def main():
-    parser = argparse.ArgumentParser(description="金門大學校務系統 MVP 假資料產生器")
+    # 解析命令列參數：-o 指定輸出檔、--seed 指定隨機種子以便重現
+    parser = argparse.ArgumentParser(description="校務系統 MVP 假資料產生器")
     parser.add_argument("-o", "--output", help="輸出 SQL 檔案路徑", default=None)
     parser.add_argument("--seed", type=int, help="隨機種子", default=None)
     args = parser.parse_args()
@@ -289,6 +298,7 @@ def main():
     sql = generate_sql()
 
     if args.output:
+        # 指定輸出檔則寫入，否則直接印到 stdout
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(sql)
         print(f"假資料已寫入: {args.output}")

@@ -1,3 +1,4 @@
+// 登入頁：呼叫後端登入 API、儲存 token 與使用者資訊後依角色導向首頁。
 import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api, getErrorMessage, saveUser } from '../api/client'
@@ -17,8 +18,10 @@ export default function Login() {
     setLoading(true)
     try {
       const { data } = await api.post<LoginResponse>('/auth/login', { username, password })
+      // 儲存 token 與使用者資訊到 localStorage
       localStorage.setItem('nqu_token', data.token)
       saveUser(data)
+      // 依角色前往對應首頁
       navigate(ROLE_HOME[data.role])
     } catch (err) {
       setError(getErrorMessage(err))
@@ -30,7 +33,7 @@ export default function Login() {
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <form onSubmit={handleSubmit} className="w-80 space-y-4 rounded-lg border bg-white p-8 shadow">
-        <h1 className="text-center text-xl font-bold">NQU 選課系統登入</h1>
+        <h1 className="text-center text-xl font-bold">選課系統登入</h1>
         <div>
           <label className="mb-1 block text-sm text-gray-600">帳號</label>
           <input

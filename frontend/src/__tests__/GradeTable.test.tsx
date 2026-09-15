@@ -1,9 +1,11 @@
+// GradeTable 元件單元測試：成績列渲染、送交狀態標籤、缺分數佔位、空資料訊息。
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import GradeTable from '../components/GradeTable'
 import type { Grade } from '../types'
 
 describe('GradeTable', () => {
+  // 一筆已送交、一筆未送交的假成績
   const grades: Grade[] = [
     {
       course_code: 'CSIE301',

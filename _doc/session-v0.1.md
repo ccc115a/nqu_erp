@@ -1830,11 +1830,11 @@ Let me read the plan document first.
 <path>/Users/ccc/Desktop/ccc/115a/_se/homework/hw2-nqu-erp/_doc/plan.md</path>
 <type>file</type>
 <content>
-1: # 金門大學校務系統 MVP 實作規劃
+1: # 校務系統校務系統 MVP 實作規劃
 2: 
 3: ## 系統概述
 4: 
-5: 金門大學（NQU）校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
+5: 通用校務系統校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
 6: 
 7: ## 技術堆疊
 8: 
@@ -3375,7 +3375,7 @@ Let me fix the test script:
 <content>
 1: #!/usr/bin/env python3
 2: """
-3: 金門大學校務系統 MVP 假資料產生器
+3: 校務系統校務系統 MVP 假資料產生器
 4: 產出 SQL INSERT 檔案，可塞入 SQLite 或 PostgreSQL
 5: """
 6: 
@@ -3450,7 +3450,7 @@ _Thinking:_
 Let me combine the prior summary with the conversation to create a comprehensive updated summary.
 
 ## Objective
-- Build an NQU (金門大學) academic affairs system MVP focused on course enrollment and grade management
+- Build an NQU (校務系統) academic affairs system MVP focused on course enrollment and grade management
 - Backend in Rust (Axum + SeaORM), database swappable between SQLite (dev) and PostgreSQL (prod), Python seed script for fake data (no frontend yet)
 
 ## Important Details
@@ -5689,11 +5689,11 @@ Now write `_doc/v0.1.md`:
 <path>/Users/ccc/Desktop/ccc/115a/_se/homework/hw2-nqu-erp/_doc/plan.md</path>
 <type>file</type>
 <content>
-1: # 金門大學校務系統 MVP 實作規劃
+1: # 校務系統校務系統 MVP 實作規劃
 2: 
 3: ## 系統概述
 4: 
-5: 金門大學（NQU）校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
+5: 通用校務系統校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
 6: 
 7: ## 技術堆疊
 8: 
@@ -5839,7 +5839,7 @@ Now I'll write the v0.1.md based on what we've built so far.
 ```json
 {
   "filePath": "/Users/ccc/Desktop/ccc/115a/_se/homework/hw2-nqu-erp/_doc/v0.1.md",
-  "content": "# NQU-ERP v0.1 Release Notes\n\n## 版本概述\n\n金門大學校務系統 MVP v0.1，聚焦**選課與成績管理**核心功能。\n\n## 功能清單\n\n### 認證與授權\n\n- JWT 登入（學生/教師/管理員三種角色）\n- RBAC 角色權限控管（`/admin/*` 限管理員、選課限學生、成績登錄限教師）\n\n### 學生功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 課程查詢 | `GET /api/v1/courses` | 支援 year/semester 篩選 |\n| 加選 | `POST /api/v1/enrollments` | 衝堂檢查 + 名額檢查 + Transaction |\n| 退選 | `DELETE /api/v1/enrollments` | 更新 enrolled_count、刪除成績記錄 |\n| 課表查詢 | `GET /api/v1/students/me/schedule` | 按星期/節次排序 |\n| 成績查詢 | `GET /api/v1/students/me/grades` | 含期中/期末/總成績及送交狀態 |\n\n### 教師功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 授課清單 | `GET /api/v1/teachers/me/courses` | 列出本學期授課 |\n| 成績登錄 | `PUT /api/v1/grades/batch` | 批次設定期中/期末成績 |\n| 成績鎖定 | `POST /api/v1/grades/submit` | 鎖定送交，鎖定後無法修改 |\n\n### 管理員功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 建立使用者 | `POST /api/v1/admin/users` | 新增學生/教師帳號 |\n| 建立課程 | `POST /api/v1/admin/courses` | 新增課程含時段 |\n\n## 技術架構\n\n| 項目 | 技術 |\n|------|------|\n| 後端框架 | Rust + Axum 0.8 |\n| ORM | SeaORM 2 (SQLite/PostgreSQL 可抽換) |\n| 認證 | JWT (jsonwebtoken + bcrypt) |\n| 資料庫遷移 | sea-orm-migration（6 tables, 3 indexes） |\n| 假資料 | Python seed script (bcrypt, 可複製 `--seed 42`) |\n\n## 資料表\n\n| 資料表 | 說明 |\n|--------|------|\n| `departments` | 科系 |\n| `users` | 使用者（含密碼 bcrypt hash） |\n| `courses` | 課程（含學年/學期/名額） |\n| `class_schedules` | 上課時段（星期 + 節次） |\n| `enrollments` | 選課紀錄（status: ENROLLED/DROPPED） |\n| `grades` | 成績（含期中/期末/總分/送交狀態） |\n\n## 快速開始\n\n```bash\n# 1. 建置\ncargo build\n\n# 2. 啟動 server（自動跑 migration）\n./target/debug/nqu-erp\n\n# 3. 插入假資料（另開終端）\npython3 scripts/seed.py -o scripts/seed.sql --seed 42\nsqlite3 dev.db < scripts/seed.sql\n\n# 4. 登入取得 token\ncurl -X POST http://localhost:8080/api/v1/auth/login \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"username\":\"11303001\",\"password\":\"student123\"}'\n```\n\n## 測試帳號\n\n| 帳號 | 密碼 | 角色 |\n|------|------|------|\n| `11303001` | `student123` | 學生 |\n| `T001` | `teacher123` | 教師 |\n| `admin` | `admin123` | 管理員 |\n\n## 自動化測試\n\n```bash\nbash test.sh    # 33 tests, build + server + seed + API 驗證\n```\n\n## 已知限制\n\n- 成績鎖定後無法解鎖（需後續加入 rollback 機制）\n- `enrolled_count` 使用 SeaORM model update，非 DB-level atomic\n- 未實作加退選時程管理 API\n- 退選後不可重新加選同一課程（需聯繫管理員）\n"
+  "content": "# NQU-ERP v0.1 Release Notes\n\n## 版本概述\n\n校務系統校務系統 MVP v0.1，聚焦**選課與成績管理**核心功能。\n\n## 功能清單\n\n### 認證與授權\n\n- JWT 登入（學生/教師/管理員三種角色）\n- RBAC 角色權限控管（`/admin/*` 限管理員、選課限學生、成績登錄限教師）\n\n### 學生功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 課程查詢 | `GET /api/v1/courses` | 支援 year/semester 篩選 |\n| 加選 | `POST /api/v1/enrollments` | 衝堂檢查 + 名額檢查 + Transaction |\n| 退選 | `DELETE /api/v1/enrollments` | 更新 enrolled_count、刪除成績記錄 |\n| 課表查詢 | `GET /api/v1/students/me/schedule` | 按星期/節次排序 |\n| 成績查詢 | `GET /api/v1/students/me/grades` | 含期中/期末/總成績及送交狀態 |\n\n### 教師功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 授課清單 | `GET /api/v1/teachers/me/courses` | 列出本學期授課 |\n| 成績登錄 | `PUT /api/v1/grades/batch` | 批次設定期中/期末成績 |\n| 成績鎖定 | `POST /api/v1/grades/submit` | 鎖定送交，鎖定後無法修改 |\n\n### 管理員功能\n\n| 功能 | API | 說明 |\n|------|-----|------|\n| 建立使用者 | `POST /api/v1/admin/users` | 新增學生/教師帳號 |\n| 建立課程 | `POST /api/v1/admin/courses` | 新增課程含時段 |\n\n## 技術架構\n\n| 項目 | 技術 |\n|------|------|\n| 後端框架 | Rust + Axum 0.8 |\n| ORM | SeaORM 2 (SQLite/PostgreSQL 可抽換) |\n| 認證 | JWT (jsonwebtoken + bcrypt) |\n| 資料庫遷移 | sea-orm-migration（6 tables, 3 indexes） |\n| 假資料 | Python seed script (bcrypt, 可複製 `--seed 42`) |\n\n## 資料表\n\n| 資料表 | 說明 |\n|--------|------|\n| `departments` | 科系 |\n| `users` | 使用者（含密碼 bcrypt hash） |\n| `courses` | 課程（含學年/學期/名額） |\n| `class_schedules` | 上課時段（星期 + 節次） |\n| `enrollments` | 選課紀錄（status: ENROLLED/DROPPED） |\n| `grades` | 成績（含期中/期末/總分/送交狀態） |\n\n## 快速開始\n\n```bash\n# 1. 建置\ncargo build\n\n# 2. 啟動 server（自動跑 migration）\n./target/debug/nqu-erp\n\n# 3. 插入假資料（另開終端）\npython3 scripts/seed.py -o scripts/seed.sql --seed 42\nsqlite3 dev.db < scripts/seed.sql\n\n# 4. 登入取得 token\ncurl -X POST http://localhost:8080/api/v1/auth/login \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"username\":\"11303001\",\"password\":\"student123\"}'\n```\n\n## 測試帳號\n\n| 帳號 | 密碼 | 角色 |\n|------|------|------|\n| `11303001` | `student123` | 學生 |\n| `T001` | `teacher123` | 教師 |\n| `admin` | `admin123` | 管理員 |\n\n## 自動化測試\n\n```bash\nbash test.sh    # 33 tests, build + server + seed + API 驗證\n```\n\n## 已知限制\n\n- 成績鎖定後無法解鎖（需後續加入 rollback 機制）\n- `enrolled_count` 使用 SeaORM model update，非 DB-level atomic\n- 未實作加退選時程管理 API\n- 退選後不可重新加選同一課程（需聯繫管理員）\n"
 }
 ```
 
@@ -6142,11 +6142,11 @@ Let me read the full plan.md first to understand the structure before editing.
 <path>/Users/ccc/Desktop/ccc/115a/_se/homework/hw2-nqu-erp/_doc/plan.md</path>
 <type>file</type>
 <content>
-1: # 金門大學校務系統 MVP 實作規劃
+1: # 校務系統校務系統 MVP 實作規劃
 2: 
 3: ## 系統概述
 4: 
-5: 金門大學（NQU）校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
+5: 通用校務系統校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
 6: 
 7: ## 技術堆疊
 8: 
@@ -7352,7 +7352,7 @@ Let me write it now.
 <content>
 1: #!/usr/bin/env python3
 2: """
-3: 金門大學校務系統 MVP 假資料產生器
+3: 校務系統校務系統 MVP 假資料產生器
 4: 產出 SQL INSERT 檔案，可塞入 SQLite 或 PostgreSQL
 5: """
 6: 
@@ -7449,7 +7449,7 @@ Now I have enough context to write AGENTS.md. Let me write it comprehensively co
 **Input:**
 ```json
 {
-  "content": "# AGENTS.md — NQU-ERP 開發指南\n\n## 專案概述\n\n金門大學校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。\n\n## Build & Run\n\n```bash\n# Backend\ncargo build                          # 編譯（零 warnings 為目標）\ncargo run                            # 啟動 server（自動跑 migration）\n./target/debug/nqu-erp               # 直接執行 binary\n\n# Frontend (v0.2+)\ncd frontend && npm install && npm run dev\n```\n\n## Testing\n\n```bash\nbash test.sh                         # 整合測試（33 tests，含 build + server + seed + API）\ncargo test                           # Rust 單元測試（目前為空）\n```\n\n`test.sh` 會自動：build → 啟動 server → seed → 測試所有 API → kill server。退出碼 0 = 全數通過。\n\n## 環境變數\n\n在 `.env` 設定（已 gitignore）：\n\n```\nDATABASE_URL=sqlite://dev.db?mode=rwc   # 開發用 SQLite\nJWT_SECRET=nqu-erp-secret-key-change-in-production\nSERVER_ADDR=0.0.0.0:8080\n```\n\n切換 PostgreSQL：改 `DATABASE_URL=postgres://user:pass@localhost:5432/nqu_db`，程式碼零修改。\n\n## 專案結構\n\n```\nnqu-erp/\n├── src/\n│   ├── main.rs              # 啟動入口、Router 設定、AppState\n│   ├── config.rs            # Config::from_env()（dotenvy）\n│   ├── db.rs                # establish_connection + run_migrations\n│   ├── errors.rs            # AppError（HTTP status + message）\n│   ├── entities/            # SeaORM entity（手動撰寫，非 CLI 產生）\n│   │   ├── mod.rs\n│   │   ├── departments.rs\n│   │   ├── users.rs\n│   │   ├── courses.rs\n│   │   ├── class_schedules.rs\n│   │   ├── enrollments.rs\n│   │   └── grades.rs\n│   ├── handlers/            # API handler 函式\n│   │   ├── mod.rs\n│   │   ├── auth.rs          # POST /api/v1/auth/login\n│   │   ├── course.rs        # GET /courses, GET /teachers/me/courses\n│   │   ├── enrollment.rs    # POST/DELETE /enrollments, GET /students/me/schedule\n│   │   ├── grade.rs         # PUT /grades/batch, POST /grades/submit, GET /students/me/grades\n│   │   └── admin.rs         # POST /admin/users, POST /admin/courses\n│   └── middleware/\n│       ├── mod.rs           # exports AuthUser, create_token\n│       └── auth.rs          # AuthUser extractor + JWT encode/decode\n├── migrations/              # SeaORM migration（6 tables + 3 indexes）\n├── scripts/\n│   ├── seed.py              # Python 假資料產生器（bcrypt）\n│   └── seed.sql             # 產出的 SQL\n├── test.sh                  # 自動化整合測試\n├── frontend/                # React frontend（v0.2+）\n└── _doc/\n    ├── plan.md              # 完整規劃文件\n    └── v0.1.md              # v0.1 版本說明\n```\n\n## Code Conventions\n\n### Rust\n\n- **Error Handling**: 所有 handler 回傳 `Result<Json<T>, AppError>`。用 `?` 傳播 DB/JSON 錯誤，用 `AppError::bad_request/unauthorized/forbidden/not_found/internal` 回傳業務錯誤。\n- **中文錯誤訊息**: 業務錯誤訊息使用中文（如 `\"帳號或密碼錯誤\"`、`\"課程時間衝突！\"`）。\n- **AuthUser**: Handler 第二個 parameter 使用 `auth: AuthUser`，自動從 `Authorization: Bearer <token>` 解析。用 `auth.is_student()` / `is_teacher()` / `is_admin()` 判斷角色。\n- **Transaction**: 涉及多表寫入的操作（加選、退選）使用 `state.db.begin()` + `tx.commit()` 確保 ACID。\n- **Entity**: 手動撰寫（因 SeaORM v2 CLI API 變動），含 `Relation` impl。\n- **Migration**: `pk_auto` 從 `sea_orm_migration::schema` import；index 用 `manager.create_index()`。\n- **不加不必要的 comments**，程式碼本身應自說明。\n- **State**: 使用 `State(state): State<AppState>` 提取，不使用 extensions 注入。\n\n### API 回傳格式\n\n成功：\n```json\n{ \"success\": true, \"message\": \"加選成功！\" }\n```\n\n失敗：\n```json\n{ \"error\": \"課程時間衝突！與已選課程在星期 1 第 6~8 節重疊\" }\n```\n\n### Seed Data\n\n```bash\npython3 scripts/seed.py -o scripts/seed.sql --seed 42\nsqlite3 dev.db < scripts/seed.sql\n```\n\n- `--seed 42` 確保可複製\n- 密碼：學生 `student123`、教師 `teacher123`、管理員 `admin123`\n- 學號格式：`113XXXXXX`（如 `11303001`）\n- 教師帳號：`T001` ~ `T010`\n- 佔用 port 8080，啟動前確認無其他 process\n\n## Git\n\n- `dev.db`、`.env`、`/target` 已 gitignore\n- Commit message 使用中文，簡述改動\n- 不要 commit `dev.db` 或任何 secrets\n\n## 當前版本\n\nv0.1 完成。下一步 v0.2（Student Frontend）。詳見 `_doc/plan.md` 版本規劃。\n",
+  "content": "# AGENTS.md — NQU-ERP 開發指南\n\n## 專案概述\n\n校務系統校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。\n\n## Build & Run\n\n```bash\n# Backend\ncargo build                          # 編譯（零 warnings 為目標）\ncargo run                            # 啟動 server（自動跑 migration）\n./target/debug/nqu-erp               # 直接執行 binary\n\n# Frontend (v0.2+)\ncd frontend && npm install && npm run dev\n```\n\n## Testing\n\n```bash\nbash test.sh                         # 整合測試（33 tests，含 build + server + seed + API）\ncargo test                           # Rust 單元測試（目前為空）\n```\n\n`test.sh` 會自動：build → 啟動 server → seed → 測試所有 API → kill server。退出碼 0 = 全數通過。\n\n## 環境變數\n\n在 `.env` 設定（已 gitignore）：\n\n```\nDATABASE_URL=sqlite://dev.db?mode=rwc   # 開發用 SQLite\nJWT_SECRET=nqu-erp-secret-key-change-in-production\nSERVER_ADDR=0.0.0.0:8080\n```\n\n切換 PostgreSQL：改 `DATABASE_URL=postgres://user:pass@localhost:5432/nqu_db`，程式碼零修改。\n\n## 專案結構\n\n```\nnqu-erp/\n├── src/\n│   ├── main.rs              # 啟動入口、Router 設定、AppState\n│   ├── config.rs            # Config::from_env()（dotenvy）\n│   ├── db.rs                # establish_connection + run_migrations\n│   ├── errors.rs            # AppError（HTTP status + message）\n│   ├── entities/            # SeaORM entity（手動撰寫，非 CLI 產生）\n│   │   ├── mod.rs\n│   │   ├── departments.rs\n│   │   ├── users.rs\n│   │   ├── courses.rs\n│   │   ├── class_schedules.rs\n│   │   ├── enrollments.rs\n│   │   └── grades.rs\n│   ├── handlers/            # API handler 函式\n│   │   ├── mod.rs\n│   │   ├── auth.rs          # POST /api/v1/auth/login\n│   │   ├── course.rs        # GET /courses, GET /teachers/me/courses\n│   │   ├── enrollment.rs    # POST/DELETE /enrollments, GET /students/me/schedule\n│   │   ├── grade.rs         # PUT /grades/batch, POST /grades/submit, GET /students/me/grades\n│   │   └── admin.rs         # POST /admin/users, POST /admin/courses\n│   └── middleware/\n│       ├── mod.rs           # exports AuthUser, create_token\n│       └── auth.rs          # AuthUser extractor + JWT encode/decode\n├── migrations/              # SeaORM migration（6 tables + 3 indexes）\n├── scripts/\n│   ├── seed.py              # Python 假資料產生器（bcrypt）\n│   └── seed.sql             # 產出的 SQL\n├── test.sh                  # 自動化整合測試\n├── frontend/                # React frontend（v0.2+）\n└── _doc/\n    ├── plan.md              # 完整規劃文件\n    └── v0.1.md              # v0.1 版本說明\n```\n\n## Code Conventions\n\n### Rust\n\n- **Error Handling**: 所有 handler 回傳 `Result<Json<T>, AppError>`。用 `?` 傳播 DB/JSON 錯誤，用 `AppError::bad_request/unauthorized/forbidden/not_found/internal` 回傳業務錯誤。\n- **中文錯誤訊息**: 業務錯誤訊息使用中文（如 `\"帳號或密碼錯誤\"`、`\"課程時間衝突！\"`）。\n- **AuthUser**: Handler 第二個 parameter 使用 `auth: AuthUser`，自動從 `Authorization: Bearer <token>` 解析。用 `auth.is_student()` / `is_teacher()` / `is_admin()` 判斷角色。\n- **Transaction**: 涉及多表寫入的操作（加選、退選）使用 `state.db.begin()` + `tx.commit()` 確保 ACID。\n- **Entity**: 手動撰寫（因 SeaORM v2 CLI API 變動），含 `Relation` impl。\n- **Migration**: `pk_auto` 從 `sea_orm_migration::schema` import；index 用 `manager.create_index()`。\n- **不加不必要的 comments**，程式碼本身應自說明。\n- **State**: 使用 `State(state): State<AppState>` 提取，不使用 extensions 注入。\n\n### API 回傳格式\n\n成功：\n```json\n{ \"success\": true, \"message\": \"加選成功！\" }\n```\n\n失敗：\n```json\n{ \"error\": \"課程時間衝突！與已選課程在星期 1 第 6~8 節重疊\" }\n```\n\n### Seed Data\n\n```bash\npython3 scripts/seed.py -o scripts/seed.sql --seed 42\nsqlite3 dev.db < scripts/seed.sql\n```\n\n- `--seed 42` 確保可複製\n- 密碼：學生 `student123`、教師 `teacher123`、管理員 `admin123`\n- 學號格式：`113XXXXXX`（如 `11303001`）\n- 教師帳號：`T001` ~ `T010`\n- 佔用 port 8080，啟動前確認無其他 process\n\n## Git\n\n- `dev.db`、`.env`、`/target` 已 gitignore\n- Commit message 使用中文，簡述改動\n- 不要 commit `dev.db` 或任何 secrets\n\n## 當前版本\n\nv0.1 完成。下一步 v0.2（Student Frontend）。詳見 `_doc/plan.md` 版本規劃。\n",
   "filePath": "/Users/ccc/Desktop/ccc/115a/_se/homework/hw2-nqu-erp/AGENTS.md"
 }
 ```

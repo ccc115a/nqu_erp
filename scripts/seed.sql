@@ -1,5 +1,5 @@
--- 金門大學校務系統 MVP 假資料
--- 產生時間: 2026-09-11 16:57:54
+-- 校務系統 MVP 假資料
+-- 產生時間: 2026-09-15 09:10:38
 
 -- 科系資料
 INSERT INTO departments (dept_id, dept_code, dept_name) VALUES (1, 'CSIE', '資訊工程學系');
@@ -9,52 +9,52 @@ INSERT INTO departments (dept_id, dept_code, dept_name) VALUES (4, 'BA', '企業
 INSERT INTO departments (dept_id, dept_code, dept_name) VALUES (5, 'TM', '觀光管理學系');
 
 -- 教師帳號 (密碼: teacher123)
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (1, 'T001', '$2b$12$X8UQbmDrfjYtf9YpLHhl5O7hE4.OZnINwBeC4scDM5yE./q8eHtyi', '王大明', 'TEACHER', 1, 't001@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (2, 'T002', '$2b$12$xdygFG7fP6dalb.7qosg4eIWiHoBFV3YHXjaTzXb2jMMHB9eNSrm.', '李小華', 'TEACHER', 1, 't002@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (3, 'T003', '$2b$12$zVLW27XPK2zIOBjEy3L9U.O1gibLCgxh7bHVpvhZC27w3XQyTmC4G', '張志偉', 'TEACHER', 2, 't003@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (4, 'T004', '$2b$12$tvgryRcGDxdiWVedde6gheP/6vOfITLjvfHapfh3GqHkaLZrMEz92', '陳美玲', 'TEACHER', 2, 't004@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (5, 'T005', '$2b$12$45nSvp1bLOVVo6NaMwRyK.FU4DOY.kEvvdYOP6xwJLYMxCm.WJ6R2', '林俊傑', 'TEACHER', 3, 't005@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (6, 'T006', '$2b$12$Em0gKIIg7O39ewT1JOtQWOtMIjK.I26AwWMb4Mivzd8pu77UAhF.W', '黃雅芬', 'TEACHER', 3, 't006@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (7, 'T007', '$2b$12$XGV6FwaUrPSsQ5ObEW42/eHVC8PX1RuvMwoXMhE3ZsPyD.ar9bBGC', '劉建宏', 'TEACHER', 4, 't007@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (8, 'T008', '$2b$12$lwbXuUp6YMkP/E7B8u39C.NksySBR9CoGg3b8xKNQR4W4lsqBOhva', '吳佳琳', 'TEACHER', 4, 't008@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (9, 'T009', '$2b$12$9l/4DefnUATqLBKhCcH9ROrgu4zF4rYRbk.r2IgJxsjMUxsPj5bey', '鄭明哲', 'TEACHER', 5, 't009@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (10, 'T010', '$2b$12$ZKvFoR/FEREQ.KbAq5mHjuXPW30hgNarfSeA0qzCNQ0sKUFSySqJy', '蔡雅婷', 'TEACHER', 5, 't010@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (1, 'T001', '$2b$12$Y5fuacv9uy9uLQ1R5JJUCu51IwA9OjUukYFAfAUP0qSs6nNCx3sLO', '王大明', 'TEACHER', 1, 't001@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (2, 'T002', '$2b$12$H3MJhAvr5Z8Tv41.Pt4bVeBQaHyty.nXeHlIPh/pOYQruaSVF3Fl2', '李小華', 'TEACHER', 1, 't002@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (3, 'T003', '$2b$12$qLKTnmHsDNq0usTojUv1PeCUwysuMLf2qYHoODEXn3lxz6cXRPtlK', '張志偉', 'TEACHER', 2, 't003@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (4, 'T004', '$2b$12$Pg7vMMgKufzj5d58Br08AOjM9rrTWCun2PeXzBgJUXX4d6I53E3Ni', '陳美玲', 'TEACHER', 2, 't004@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (5, 'T005', '$2b$12$YEdeg8fpOQ3Gsy5/EJgFvuUDpe2f4cIuHcu/OmnIq.IizC9./vuWu', '林俊傑', 'TEACHER', 3, 't005@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (6, 'T006', '$2b$12$fwRVt2r/qU4.LqTg4vMIPe3SFUJN3SwpbZzaZLNiCe1Psu/xAi7S.', '黃雅芬', 'TEACHER', 3, 't006@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (7, 'T007', '$2b$12$9jWWr0WOhXLSkoHBVo9shergFxcilMeiFz4AQPka8Hhgds23scUIi', '劉建宏', 'TEACHER', 4, 't007@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (8, 'T008', '$2b$12$wFHVxIKGiLmiDcCXH9JbJu2VXDzb9.mUCNBgSw.pudHRkPPZjPcca', '吳佳琳', 'TEACHER', 4, 't008@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (9, 'T009', '$2b$12$voA46gBHbcOvbhCeLsiup.pbPXlSvGlQkHlvtin1CUMFbyyyV99q6', '鄭明哲', 'TEACHER', 5, 't009@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (10, 'T010', '$2b$12$K4IhIEpQ5K8X5UPTJgHXNe6ObTrM/O5zYorGMbBm/gRnDQ3SQ3kr.', '蔡雅婷', 'TEACHER', 5, 't010@nqu.edu.tw');
 
 -- 學生帳號 (密碼: student123)
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (11, '11303001', '$2b$12$bKX6arkNsgjzi/eRjESFdegiQL3CusoNkWdYY0OfmS7mbX0D2jpoS', '陳小明', 'STUDENT', 1, '11303001@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (12, '11303002', '$2b$12$6LL1HH.5WUBV4LZX1pUpNeZWMO/XE.ktbtrtkxjCh8X.QXEy4kU/m', '林小華', 'STUDENT', 1, '11303002@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (13, '11303003', '$2b$12$1yjV3FkXMbR8zXGMnEcxyOOh/DKYQ8DuT98sAn.hyqDJSYKD8HVvO', '張小強', 'STUDENT', 1, '11303003@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (14, '11303004', '$2b$12$sCMTvAAnqxkpWBf5Qg9Kzebzx911afOTWQZyQ.wOKK/I9UOl5gj12', '王小美', 'STUDENT', 1, '11303004@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (15, '11303005', '$2b$12$q.xDufQVVAgo6lZQhx./au3OnUWUxdW26h3VPOBhKra3s9cUsalOy', '李小莉', 'STUDENT', 1, '11303005@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (16, '11303006', '$2b$12$11./xOhVDDCZdvga0Z/Xdeerw0ahfVYLcyAMM0RBHY/AIW6QLxC.y', '黃小偉', 'STUDENT', 1, '11303006@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (17, '11306001', '$2b$12$rEAvStoE.ASaGR/4RAMN/OEiK5czSMGz55.zFB6zD44ZOCg7QA5bm', '劉志豪', 'STUDENT', 2, '11306001@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (18, '11306002', '$2b$12$LqnW1xQvzIG2Atk8SC/afO9TwFfwbZ9MfrXZ1I865IIBZ3siTF0X2', '陳雅芳', 'STUDENT', 2, '11306002@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (19, '11306003', '$2b$12$S.rdrd08osZzl9q1.7pneuNjYqc7xSpBv0xu01u6bAvxsAOUmADNy', '林俊宏', 'STUDENT', 2, '11306003@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (20, '11306004', '$2b$12$YHQQC/4g6DMwhJANkZREpeG/gNOPD82yvjrzi6Pb6Bwo8PSnpGF6O', '張美玲', 'STUDENT', 2, '11306004@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (21, '11306005', '$2b$12$XIIqzUrZTLLNQAEf4QJsDe6u54i5IYoCZ2vhXwDGJzgiSbLZGBmYy', '王建平', 'STUDENT', 2, '11306005@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (22, '11306006', '$2b$12$OFO275riMAGA3mFg0oFgweR2wrIXshmljoGuPXT/nYIucNyHQuQwi', '李小娟', 'STUDENT', 2, '11306006@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (23, '11308001', '$2b$12$FhBGLrm3G7ogCIJ8xva2RuINsMjM0077ymNwjlAaaDoFoiyTu4kU6', '黃志偉', 'STUDENT', 3, '11308001@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (24, '11308002', '$2b$12$VMtkxfceCjpx1u25IW/1UOsvTxxLbzrgtWhB.pjGv//UfRXk34iH2', '林美慧', 'STUDENT', 3, '11308002@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (25, '11308003', '$2b$12$1eZk3PTIGYNkRYKEpAthWeSIh9nfvWOh4dVoALYvKmwfdsKv8BHri', '張家豪', 'STUDENT', 3, '11308003@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (26, '11308004', '$2b$12$mn/jfSUSpD4Q/cP.jkZeLuL1tIyrTUWaFEZkVQrZUPgXPHV8bIrcy', '陳小雲', 'STUDENT', 3, '11308004@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (27, '11308005', '$2b$12$oT0pC3i9yeE0ygmwzj/Ak.Wn3hcGfje2pzIBuXIq/kBgn2ANHOxSe', '王大同', 'STUDENT', 3, '11308005@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (28, '11308006', '$2b$12$RROzYwuT9FNMIdIWTtXf8eYEOlTMAvxVNcnvmSjpk9fZldNnsv0Y2', '李志明', 'STUDENT', 3, '11308006@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (29, '11312001', '$2b$12$OHDngWxOJrWixp/fym9Ywu7maCHOhUTqgOqJexXwVulsCgm0jceaq', '劉美玲', 'STUDENT', 4, '11312001@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (30, '11312002', '$2b$12$OOGboeA/Qz8hN2QTW4lMVuHZhvzelKNOo0mljLD8R2p.J2uNibdIa', '陳建志', 'STUDENT', 4, '11312002@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (31, '11312003', '$2b$12$Spe6QTN7dEBzltGAJRbrMOTR1WhLzqP1HRSUwM2S9/HlqZqNxedQO', '林小芬', 'STUDENT', 4, '11312003@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (32, '11312004', '$2b$12$ET4kx8dLKEt/hIB2JZo88.3DXhzE4h/E5ZCCjW4eNTQZCv4eHCXMa', '張志豪', 'STUDENT', 4, '11312004@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (33, '11312005', '$2b$12$oYgJc2TrAIdkR8B10U2W9ee0BKuQshOvRsqR7LP2zuoL3IUv6W0qq', '王美華', 'STUDENT', 4, '11312005@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (34, '11312006', '$2b$12$B4uvHytF3lhtFY6wtLHliuQKnic/yNYttMsXFqhivjKzO1pA0Q4jy', '李建華', 'STUDENT', 4, '11312006@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (35, '11315001', '$2b$12$RB6d6AoIPhnv.hIkOat1E.vqe6HZ12svN7AHpjaxdbeaebsidV8MG', '鄭小玲', 'STUDENT', 5, '11315001@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (36, '11315002', '$2b$12$sBiNZhgvcprzB8GFmRp1tO4VN8N3o1e8o8eZ7h/u9e5brQfJrAO9C', '蔡志偉', 'STUDENT', 5, '11315002@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (37, '11315003', '$2b$12$.SQB.bgaPvPLuhNVNlyE9uYQqN8H7aCQyYJ9YyXzJ8E4qN8CdXtsK', '林美珍', 'STUDENT', 5, '11315003@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (38, '11315004', '$2b$12$H/Y3BITvtw29/Py6qTysJe3J7xyz.9dUhJ/xW0uai.UtcItyRr7wi', '張家榮', 'STUDENT', 5, '11315004@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (39, '11315005', '$2b$12$I9v2phUx8h8gjgMbCtlRyekGpbdWbsc5/iL3TN0cSaoakx6sBX1U6', '王小萍', 'STUDENT', 5, '11315005@stu.nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (40, '11315006', '$2b$12$6ZJY1K41KxdMkEXXHur0Fum6S1Giam7ILU7zy0avHTYwGMVZz1qa2', '李雅芳', 'STUDENT', 5, '11315006@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (11, '11303001', '$2b$12$KnfrhXANuDfe31LWTvUeLOZvLfBVzt/rp41742/6d/yadFfSSO//S', '陳小明', 'STUDENT', 1, '11303001@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (12, '11303002', '$2b$12$/1IoXlp8t0LO6O4zFYpM1Oie3sMIp2fDgvX2t.enmN.y1oPGZpeZq', '林小華', 'STUDENT', 1, '11303002@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (13, '11303003', '$2b$12$ysFDhZW8jfE9HVaX4g0QOeStcZoyDj.tm/29F5wwBupxqHr8DP.cq', '張小強', 'STUDENT', 1, '11303003@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (14, '11303004', '$2b$12$rYiZkf5q9z9UO8e4pswMg.6nAmC1gE7n2JaHGJHno0ZTxMGunhMem', '王小美', 'STUDENT', 1, '11303004@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (15, '11303005', '$2b$12$J2FUhOxDD16wZFRGgQNwF.04mCsGPhaNHMFvtctipSk9Jn2gLGhtK', '李小莉', 'STUDENT', 1, '11303005@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (16, '11303006', '$2b$12$9t2j9/sxP9cL6B2EsfyaCOwB5446LjAJSNzj5mJP3GwDEVX7M0TTG', '黃小偉', 'STUDENT', 1, '11303006@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (17, '11306001', '$2b$12$lWUkPby7v7qYDmWyU2kEie/7N9ZGjo3I2YC7eoIwGWKbGNbyWptSq', '劉志豪', 'STUDENT', 2, '11306001@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (18, '11306002', '$2b$12$JijY1Vn/y2jFWUaQaCT/HuUgshdOOgsEvTfAPqg6TZs0nDSFWtgW2', '陳雅芳', 'STUDENT', 2, '11306002@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (19, '11306003', '$2b$12$BJG738HXXZqKNyKQMKBbmOUy.kcIPOz7c6958a0M0Behl7NIOvCvG', '林俊宏', 'STUDENT', 2, '11306003@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (20, '11306004', '$2b$12$rL46olOQP0fbxv9EiXmou.qMk7TuXotyfIUunfax/fSMFAVD9JGZi', '張美玲', 'STUDENT', 2, '11306004@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (21, '11306005', '$2b$12$/YhFwzyVjH37ZuU74XO/Lu9XvA8G1WSzd6wpItOWIatEb9B7XjFLm', '王建平', 'STUDENT', 2, '11306005@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (22, '11306006', '$2b$12$OSwDsxOwssPDIjj7gexmI.4.bvkO0jhX38n0XEiqUxPFK7uQYKkRK', '李小娟', 'STUDENT', 2, '11306006@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (23, '11308001', '$2b$12$Y8b/qlV/zCQ4FMnMxplp1OYj.DEzt9JzxdDLuAGzAk.UEvftdSWhG', '黃志偉', 'STUDENT', 3, '11308001@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (24, '11308002', '$2b$12$JmT4n1fOVL2ogxy.rZeWKOtMG/GYiq6PNWsSFyS.sBqdzFva9A37.', '林美慧', 'STUDENT', 3, '11308002@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (25, '11308003', '$2b$12$PbTdd/jPe/nGwq25XjZb7uLSAu1XE0M1tPsztBxNK2QcVlE4BzMIO', '張家豪', 'STUDENT', 3, '11308003@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (26, '11308004', '$2b$12$hC6ysjdJC4QQaQ2PcZRHS.hqnpA1TfzPNbYrnBikC0a5t7DBpYLfq', '陳小雲', 'STUDENT', 3, '11308004@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (27, '11308005', '$2b$12$1j8s6UTgW/UBotAtz785BuDS.gEtIWWufeHlgcccZjm72cqjyCy7e', '王大同', 'STUDENT', 3, '11308005@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (28, '11308006', '$2b$12$a7rpyFmlHrZzRC/el5orhO.qw.S7i8.zpwyDkHUsCeyXDMxpUrV66', '李志明', 'STUDENT', 3, '11308006@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (29, '11312001', '$2b$12$xlA0aoxbh2pblwOEIxen.eEfvnsrbW/j.mEXRlyXGAUpmifKPNagC', '劉美玲', 'STUDENT', 4, '11312001@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (30, '11312002', '$2b$12$60uWZdYMX5DlC739IfEO4u/o9GEssdHct0mNyoREQ1RIG4ynGBrGO', '陳建志', 'STUDENT', 4, '11312002@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (31, '11312003', '$2b$12$MwXxKAf1ai4Cx1jvxpWb9O8h7J3YmTrUC4jpiO02lQ3J7HHDnRrFO', '林小芬', 'STUDENT', 4, '11312003@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (32, '11312004', '$2b$12$Lll0.TqtjSlkwql8coynO.c.f4HrJ9CADfwjXdr8.mMyRR5NrVks6', '張志豪', 'STUDENT', 4, '11312004@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (33, '11312005', '$2b$12$RHJMP5dDrf8uhzO60HooRuuAT6uiMvxkhwTJkRoo66K624/XmNEku', '王美華', 'STUDENT', 4, '11312005@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (34, '11312006', '$2b$12$m439EZNZAbIZy9rzGbuEVuM8oawd7i9kfiylKUG4C.DysRuICL/Lq', '李建華', 'STUDENT', 4, '11312006@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (35, '11315001', '$2b$12$wxWCn5KZnCt1qRgjSmS6EOqtyK19Td6VDXKtCmFMdG2WlO/vH8AD6', '鄭小玲', 'STUDENT', 5, '11315001@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (36, '11315002', '$2b$12$.bJwI/KS1s8yTeEcZkUtj.eCUXRMOMI3fTXlspgcb0u.2Hnv4WMGS', '蔡志偉', 'STUDENT', 5, '11315002@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (37, '11315003', '$2b$12$Z6gb/PR/aakYGlKhGB9os.af4NfKSyNJgZyInNFsZpUIrvyZ2xZxi', '林美珍', 'STUDENT', 5, '11315003@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (38, '11315004', '$2b$12$vKYePZJkTe8dHAcGkYMmGuDxTpPw2jJBGAZKFkwgTdEwo4U2SBimy', '張家榮', 'STUDENT', 5, '11315004@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (39, '11315005', '$2b$12$FhgqzKxOdX99tDbpwL9qXOPsdjBdd833fLDTf5zVOJX6/ZOFygOYm', '王小萍', 'STUDENT', 5, '11315005@stu.nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (40, '11315006', '$2b$12$40mKNlX0XePWwJupxMyAwu0IQKU9zWUalimNVbMRPYoqOcv4NiCd2', '李雅芳', 'STUDENT', 5, '11315006@stu.nqu.edu.tw');
 
 -- 管理員帳號
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (41, 'admin', '$2b$12$urbvCdXhA6/fQwc9OwxD3eC65ZBL41ZugNyavGLVm02q7NhgeU1Yi', '系統管理員', 'ADMIN', 1, 'admin@nqu.edu.tw');
-INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (42, 'dean', '$2b$12$bS5XqephYA2UB06X8HhoZO8MdaUKPI8WcikYSTWCfh1tOY.FsQcvW', '教務長', 'ADMIN', 1, 'dean@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (41, 'admin', '$2b$12$mYJufmj6GSMVnxUR1ZI6JOg1S181td/rx5ZxWKdvL0geaaw.CJ5iy', '系統管理員', 'ADMIN', 1, 'admin@nqu.edu.tw');
+INSERT INTO users (user_id, username, password_hash, full_name, role, dept_id, email) VALUES (42, 'dean', '$2b$12$li7O2aKYtv/fCNlurC/ehOqksCZAE5ykZD4JxMyegRF2Do..WXeg6', '教務長', 'ADMIN', 1, 'dean@nqu.edu.tw');
 
 -- 課程資料 (113學年第1學期)
 INSERT INTO courses (course_id, course_code, academic_year, semester, course_name, teacher_id, credits, capacity, enrolled_count, dept_id) VALUES (1, 'CSIE301', 113, 1, '資料結構', 1, 3, 30, 0, 1);

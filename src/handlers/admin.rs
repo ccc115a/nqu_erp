@@ -1,3 +1,6 @@
+//! 管理員 handler：帳號與課程的 CRUD，以及親助用的教師／科系清單。
+//! 所有端點皆需 ADMIN 角色。
+
 use axum::{extract::Path, extract::State, Json};
 use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set, TransactionTrait};
 use serde::{Deserialize, Serialize};
@@ -7,6 +10,7 @@ use crate::errors::AppError;
 use crate::middleware::AuthUser;
 use crate::AppState;
 
+/// POST /api/v1/admin/courses 請求體：開設課程所需欄位
 #[derive(Deserialize)]
 pub struct CreateCourseRequest {
     pub course_code: String,
@@ -19,17 +23,20 @@ pub struct CreateCourseRequest {
     pub dept_id: i32,
 }
 
+/// 管理端操作統一回應格式
 #[derive(Serialize)]
 pub struct AdminResponse {
     pub success: bool,
     pub message: String,
 }
 
+/// POST /api/v1/admin/courses：開設新課程（名額從 0 起算）
 pub async fn create_course(
     State(state): State<AppState>,
     auth: AuthUser,
     Json(payload): Json<CreateCourseRequest>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以開課"));
     }
@@ -55,6 +62,7 @@ pub async fn create_course(
     }))
 }
 
+/// POST /api/v1/admin/users 請求體：建立帳號所需欄位
 #[derive(Deserialize)]
 pub struct CreateUserRequest {
     pub username: String,
@@ -65,15 +73,18 @@ pub struct CreateUserRequest {
     pub email: String,
 }
 
+/// POST /api/v1/admin/users：建立學生／教師／管理員帳號
 pub async fn create_user(
     State(state): State<AppState>,
     auth: AuthUser,
     Json(payload): Json<CreateUserRequest>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以建立帳號"));
     }
 
+    // 密碼以 bcrypt 雜湊後才存庫（cost 10）
     let password_hash =
         bcrypt::hash(&payload.password, 10).map_err(|_| AppError::internal("密碼雜湊失敗"))?;
 
@@ -95,6 +106,7 @@ pub async fn create_user(
     }))
 }
 
+/// 帳號列表項目（含科系名稱，不回傳密碼）
 #[derive(Serialize)]
 pub struct UserListItem {
     pub user_id: i32,
@@ -106,10 +118,12 @@ pub struct UserListItem {
     pub email: String,
 }
 
+/// GET /api/v1/admin/users：列出所有帳號
 pub async fn list_users(
     State(state): State<AppState>,
     auth: AuthUser,
 ) -> Result<Json<Vec<UserListItem>>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以查看帳號"));
     }
@@ -117,6 +131,7 @@ pub async fn list_users(
     let all_users = users::Entity::find().all(&state.db).await?;
     let mut items = Vec::new();
 
+    // 逐一補上科系名稱
     for u in &all_users {
         let dept = departments::Entity::find_by_id(u.dept_id)
             .one(&state.db)
@@ -135,6 +150,7 @@ pub async fn list_users(
     Ok(Json(items))
 }
 
+/// 教師下拉選項（供開課表單選授課教師）
 #[derive(Serialize)]
 pub struct TeacherListItem {
     pub user_id: i32,
@@ -143,10 +159,12 @@ pub struct TeacherListItem {
     pub dept_name: String,
 }
 
+/// GET /api/v1/admin/teachers：列出所有教師（角色 = TEACHER）
 pub async fn list_teachers(
     State(state): State<AppState>,
     auth: AuthUser,
 ) -> Result<Json<Vec<TeacherListItem>>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以查看教師清單"));
     }
@@ -172,6 +190,7 @@ pub async fn list_teachers(
     Ok(Json(items))
 }
 
+/// 科系下拉選項
 #[derive(Serialize)]
 pub struct DepartmentItem {
     pub dept_id: i32,
@@ -179,10 +198,12 @@ pub struct DepartmentItem {
     pub dept_name: String,
 }
 
+/// GET /api/v1/admin/departments：列出所有科系
 pub async fn list_departments(
     State(state): State<AppState>,
     auth: AuthUser,
 ) -> Result<Json<Vec<DepartmentItem>>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以查看科系清單"));
     }
@@ -200,6 +221,7 @@ pub async fn list_departments(
     ))
 }
 
+/// PUT /api/v1/admin/users/{user_id} 請求體：password 為可選（留空不修改）
 #[derive(Deserialize)]
 pub struct UpdateUserRequest {
     pub password: Option<String>,
@@ -209,12 +231,14 @@ pub struct UpdateUserRequest {
     pub email: String,
 }
 
+/// PUT /api/v1/admin/users/{user_id}：修改帳號（不允許改 username）
 pub async fn update_user(
     State(state): State<AppState>,
     auth: AuthUser,
     Path(user_id): Path<i32>,
     Json(payload): Json<UpdateUserRequest>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以修改帳號"));
     }
@@ -224,7 +248,9 @@ pub async fn update_user(
         .await?
         .ok_or_else(|| AppError::not_found("帳號不存在"))?;
 
+    // 以現有資料為基底做部分更新
     let mut model: users::ActiveModel = user.into();
+    // 密碼為可選欄位：有提供且非空字串才重新雜湊
     if let Some(password) = payload.password {
         if !password.is_empty() {
             let hash =
@@ -244,14 +270,19 @@ pub async fn update_user(
     }))
 }
 
+/// DELETE /api/v1/admin/users/{user_id}：刪除帳號
+///
+/// 安全防護：不可刪除自己；教師有授課或學生有選課紀錄時拒絕刪除。
 pub async fn delete_user(
     State(state): State<AppState>,
     auth: AuthUser,
     Path(user_id): Path<i32>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以刪除帳號"));
     }
+    // 避免管理員誤刪自己的帳號
     if user_id == auth.user_id {
         return Err(AppError::bad_request("不能刪除自己"));
     }
@@ -261,6 +292,7 @@ pub async fn delete_user(
         .await?
         .ok_or_else(|| AppError::not_found("帳號不存在"))?;
 
+    // 若為教師且身上掛有授課課程 → 拒絕（避免課程失去授課者）
     let has_courses = !courses::Entity::find()
         .filter(courses::Column::TeacherId.eq(user_id))
         .all(&state.db)
@@ -270,6 +302,7 @@ pub async fn delete_user(
         return Err(AppError::bad_request("該教師尚有授課課程，無法刪除"));
     }
 
+    // 若為學生且有選課紀錄 → 拒絕（避免選課／成績資料斷裂）
     let has_enrollments = !enrollments::Entity::find()
         .filter(enrollments::Column::StudentId.eq(user_id))
         .all(&state.db)
@@ -287,6 +320,7 @@ pub async fn delete_user(
     }))
 }
 
+/// PUT /api/v1/admin/courses/{course_id} 請求體：與建立課程欄位一致
 #[derive(Deserialize)]
 pub struct UpdateCourseRequest {
     pub course_code: String,
@@ -299,12 +333,14 @@ pub struct UpdateCourseRequest {
     pub dept_id: i32,
 }
 
+/// PUT /api/v1/admin/courses/{course_id}：修改課程基本資料
 pub async fn update_course(
     State(state): State<AppState>,
     auth: AuthUser,
     Path(course_id): Path<i32>,
     Json(payload): Json<UpdateCourseRequest>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以修改課程"));
     }
@@ -314,6 +350,7 @@ pub async fn update_course(
         .await?
         .ok_or_else(|| AppError::not_found("課程不存在"))?;
 
+    // 全欄位覆蓋更新（enrolled_count 保留不動）
     let mut model: courses::ActiveModel = course.into();
     model.course_code = Set(payload.course_code);
     model.academic_year = Set(payload.academic_year);
@@ -331,11 +368,15 @@ pub async fn update_course(
     }))
 }
 
+/// DELETE /api/v1/admin/courses/{course_id}：刪除課程
+///
+/// 使用 Transaction 級聯清理：成績 → 選課 → 上課時間 → 課程本身。
 pub async fn delete_course(
     State(state): State<AppState>,
     auth: AuthUser,
     Path(course_id): Path<i32>,
 ) -> Result<Json<AdminResponse>, AppError> {
+    // 僅管理員
     if !auth.is_admin() {
         return Err(AppError::forbidden("只有管理員可以刪除課程"));
     }
@@ -346,6 +387,7 @@ pub async fn delete_course(
         .ok_or_else(|| AppError::not_found("課程不存在"))?;
 
     let tx = state.db.begin().await?;
+    // 1. 刪除該課程所有選課所對應的成績
     let enrollments = enrollments::Entity::find()
         .filter(enrollments::Column::CourseId.eq(course_id))
         .all(&tx)
@@ -357,14 +399,17 @@ pub async fn delete_course(
             .exec(&tx)
             .await?;
     }
+    // 2. 刪除選課紀錄
     enrollments::Entity::delete_many()
         .filter(enrollments::Column::CourseId.eq(course_id))
         .exec(&tx)
         .await?;
+    // 3. 刪除上課時間
     class_schedules::Entity::delete_many()
         .filter(class_schedules::Column::CourseId.eq(course_id))
         .exec(&tx)
         .await?;
+    // 4. 最後刪除課程本身
     courses::Entity::delete_by_id(course_id).exec(&tx).await?;
     tx.commit().await?;
 

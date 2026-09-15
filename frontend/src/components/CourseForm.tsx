@@ -1,6 +1,8 @@
+// 課程表單元件：新增／編輯模式共用；開課學期固定為 113 學年第 1 學期。
 import { FormEvent, useEffect, useState } from 'react'
 import type { Department, TeacherOption } from '../types'
 
+// 提交給上層的課程資料
 export interface CourseFormValues {
   course_code: string
   academic_year: number
@@ -28,6 +30,7 @@ export default function CourseForm({ departments, teachers, onSubmit, submitting
   const [credits, setCredits] = useState(initial?.credits ?? 3)
   const [capacity, setCapacity] = useState(initial?.capacity ?? 40)
 
+  // initial 改變（如切換要編輯的課程）時重新填入欄位
   useEffect(() => {
     setCourseCode(initial?.course_code ?? '')
     setCourseName(initial?.course_name ?? '')
@@ -43,6 +46,7 @@ export default function CourseForm({ departments, teachers, onSubmit, submitting
     e.preventDefault()
     onSubmit({
       course_code: courseCode,
+      // MVP 固定開在 113 學年第 1 學期
       academic_year: 113,
       semester: 1,
       course_name: courseName,
@@ -51,6 +55,7 @@ export default function CourseForm({ departments, teachers, onSubmit, submitting
       capacity,
       dept_id: deptId,
     })
+    // 新增成功後清空名稱欄位
     if (!editing) {
       setCourseCode('')
       setCourseName('')

@@ -1,13 +1,16 @@
+// CourseForm 元件單元測試：科系／教師選項、新增送出、送出中狀態、編輯模式預填。
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import CourseForm, { type CourseFormValues } from '../components/CourseForm'
 import type { Department, TeacherOption } from '../types'
 
+// 假的科系資料
 const departments: Department[] = [
   { dept_id: 1, dept_code: 'CSIE', dept_name: '資訊工程學系' },
   { dept_id: 2, dept_code: 'EE', dept_name: '電機工程學系' },
 ]
 
+// 假的教師選單資料
 const teachers: TeacherOption[] = [
   { user_id: 1, username: 'T001', full_name: '王大明', dept_name: '資訊工程學系' },
   { user_id: 3, username: 'T003', full_name: '張志偉', dept_name: '電機工程學系' },
@@ -25,6 +28,7 @@ describe('CourseForm', () => {
     const onSubmit = vi.fn()
     render(<CourseForm departments={departments} teachers={teachers} onSubmit={onSubmit} />)
 
+    // 填入課程代碼與名稱後送出，未填的欄位應使用預設值
     fireEvent.change(screen.getByPlaceholderText('如 CSIE301'), { target: { value: 'CSIE501' } })
     fireEvent.change(screen.getByPlaceholderText('課程名稱'), { target: { value: '人工智慧' } })
     fireEvent.click(screen.getByRole('button', { name: '建立課程' }))
@@ -56,6 +60,7 @@ describe('CourseForm', () => {
       />,
     )
 
+    // 編輯模式下按鈕應為「儲存修改」，且欄位預填初始值
     expect(screen.getByRole('button', { name: '儲存修改' })).toBeInTheDocument()
 
     const codeInput = screen.getByPlaceholderText('如 CSIE301') as HTMLInputElement

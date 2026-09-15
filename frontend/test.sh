@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 前端自動化測試：建置後端 → 匯入假資料 → 驗證課程數 → 執行 Vitest 單元測試與 Playwright E2E。
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT="$(cd .. && pwd)"

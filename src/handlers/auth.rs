@@ -1,3 +1,4 @@
+// 登入認證 handler：驗證帳號密碼並簽發 JWT token。
 use axum::{extract::State, Json};
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use serde::{Deserialize, Serialize};
@@ -26,12 +27,14 @@ pub async fn login(
     State(state): State<AppState>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<LoginResponse>, AppError> {
+    // 依帳號查詢使用者，查不到視同帳號或密碼錯誤（避免暴露帳號是否存在）
     let user = users::Entity::find()
         .filter(users::Column::Username.eq(&payload.username))
         .one(&state.db)
         .await?
         .ok_or_else(|| AppError::unauthorized("帳號或密碼錯誤"))?;
 
+    // bcrypt 驗證密碼
     let password_valid = bcrypt::verify(&payload.password, &user.password_hash)
         .map_err(|_| AppError::internal("密碼驗證錯誤"))?;
 
@@ -39,6 +42,7 @@ pub async fn login(
         return Err(AppError::unauthorized("帳號或密碼錯誤"));
     }
 
+    // 驗證通過後簽發 JWT，前端後續請求以此 token 驗證身分
     let token = create_token(user.user_id, &user.username, &user.role, &state.jwt_secret)
         .map_err(|e| AppError::internal(format!("Token 產生失敗: {}", e)))?;
 

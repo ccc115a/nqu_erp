@@ -1,3 +1,4 @@
+// 我的成績頁：抓取學生個人成績並交由 GradeTable 渲染表格。
 import { useEffect, useState } from 'react'
 import { api, getErrorMessage } from '../api/client'
 import GradeTable from '../components/GradeTable'

@@ -1,3 +1,4 @@
+// 我的課表頁：抓取個人課表並交由 WeeklySchedule 渲染週課表。
 import { useEffect, useState } from 'react'
 import { api, getErrorMessage } from '../api/client'
 import WeeklySchedule from '../components/WeeklySchedule'

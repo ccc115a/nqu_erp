@@ -1,3 +1,4 @@
+// 管理員帳號管理頁：帳號的建立／修改／刪除與搜尋。
 import { useEffect, useMemo, useState } from 'react'
 import { api, getErrorMessage } from '../api/client'
 import UserForm, { type UserFormValues } from '../components/UserForm'
@@ -14,6 +15,7 @@ export default function AdminUsers() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
 
+  // 同時載入帳號清單與科系下拉資料
   const refresh = async () => {
     const [userRes, deptRes] = await Promise.all([api.get<AdminUser[]>('/admin/users'), api.get<Department[]>('/admin/departments')])
     setUsers(userRes.data)
@@ -26,12 +28,14 @@ export default function AdminUsers() {
       .finally(() => setLoading(false))
   }, [])
 
+  // 依帳號／姓名／角色前端篩選
   const filtered = useMemo(() => {
     const q = search.trim()
     if (!q) return users
     return users.filter((u) => u.username.includes(q) || u.full_name.includes(q) || u.role.includes(q))
   }, [users, search])
 
+  // 新增或修改帳號（依是否有 editing 決定走 PUT 或 POST）
   const saveUser = async (values: UserFormValues) => {
     setError('')
     setInfo('')
@@ -50,6 +54,7 @@ export default function AdminUsers() {
     }
   }
 
+  // 刪除帳號（需經 window.confirm 確認）
   const deleteUser = async (user: AdminUser) => {
     if (!window.confirm(`確定刪除帳號 ${user.username}（${user.full_name}）？`)) return
     setError('')
@@ -76,6 +81,7 @@ export default function AdminUsers() {
       {error && <p className="mb-4 rounded bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
       {info && <p className="mb-4 rounded bg-green-50 px-3 py-2 text-sm text-green-700">{info}</p>}
 
+      {/* 新增／編輯表單：編輯時載入 initial、可取消 */}
       <div className="mb-6">
         <h2 className="mb-2 text-sm font-semibold text-gray-600">
           {editing ? `編輯帳號 ${editing.username}` : '新增帳號'}

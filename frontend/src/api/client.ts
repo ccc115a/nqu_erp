@@ -1,19 +1,24 @@
+// Axios 設定：統一 Base URL、自動帶 JWT、401 自動登出。
 import axios from 'axios'
 import type { LoginResponse } from '../types'
 
+// localStorage 的 key
 export const TOKEN_KEY = 'nqu_token'
 export const USER_KEY = 'nqu_user'
 
+// 共用 axios 實例：後端 API 前綴
 export const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
 })
 
+// 請求攔截：若有 token 自動加上 Authorization 標頭
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN_KEY)
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
+// 回應攔截：401（token 過期/無效）時清除登入狀態並導回登入頁
 api.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -25,6 +30,7 @@ api.interceptors.response.use(
   },
 )
 
+// 從 Axios 錯誤中取出後端的中文錯誤訊息，取不到時回傳通用訊息
 export function getErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {
     const data = err.response?.data as { error?: string } | undefined
@@ -33,19 +39,23 @@ export function getErrorMessage(err: unknown): string {
   return '發生錯誤，請稍後再試'
 }
 
+// 是否已登入（localStorage 有 token）
 export function isLoggedIn(): boolean {
   return Boolean(localStorage.getItem(TOKEN_KEY))
 }
 
+// 讀取目前登入使用者資訊
 export function getUser<T = LoginResponse>(): T | null {
   const raw = localStorage.getItem(USER_KEY)
   return raw ? (JSON.parse(raw) as T) : null
 }
 
+// 儲存登入使用者資訊
 export function saveUser<T>(user: T): void {
   localStorage.setItem(USER_KEY, JSON.stringify(user))
 }
 
+// 登出：清除 token 與使用者資訊
 export function logout(): void {
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(USER_KEY)

@@ -1,3 +1,5 @@
+//! Migration 0006：建立成績（grades）表，選課紀錄刪除時級聯清除成績。
+
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::pk_auto;
 
@@ -6,6 +8,7 @@ pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    /// 建立表格：enrollment_id 唯一、成績欄位可空、is_submitted 預設 false
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -19,6 +22,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Grades::TotalScore).float())
                     .col(ColumnDef::new(Grades::IsSubmitted).boolean().default(false))
                     .col(ColumnDef::new(Grades::UpdatedAt).timestamp().default(Expr::current_timestamp()))
+                    // 外鍵：退選刪掉選課紀錄時一併刪成績
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_grades_enrollment")
@@ -31,6 +35,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
+    /// 反向：刪除表格
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_table(Table::drop().table(Grades::Table).to_owned())

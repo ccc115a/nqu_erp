@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 本機開發一鍵啟動：建置後端、重置資料庫並塞入假資料，最後啟動前端 dev server。
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT="$PWD"

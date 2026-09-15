@@ -1,3 +1,4 @@
+// 管理員課程管理頁：開課／修改／刪除課程，並載入科系與教師下拉資料。
 import { useEffect, useState } from 'react'
 import { api, getErrorMessage } from '../api/client'
 import CourseForm, { type CourseFormValues } from '../components/CourseForm'
@@ -14,6 +15,7 @@ export default function AdminCourses() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
 
+  // 同時載入課程清單、科系選項與教師選項
   const refresh = async () => {
     const [courseRes, deptRes, teacherRes] = await Promise.all([
       api.get<Course[]>('/courses'),
@@ -31,6 +33,7 @@ export default function AdminCourses() {
       .finally(() => setLoading(false))
   }, [])
 
+  // 新增或修改課程（依是否有 editing 決定走 PUT 或 POST）
   const saveCourse = async (values: CourseFormValues) => {
     setError('')
     setInfo('')
@@ -49,6 +52,7 @@ export default function AdminCourses() {
     }
   }
 
+  // 刪除課程（需經 window.confirm 確認）
   const deleteCourse = async (course: Course) => {
     if (!window.confirm(`確定刪除課程 ${course.course_name}（${course.course_code}）？`)) return
     setError('')
@@ -74,6 +78,7 @@ export default function AdminCourses() {
       {error && <p className="mb-4 rounded bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
       {info && <p className="mb-4 rounded bg-green-50 px-3 py-2 text-sm text-green-700">{info}</p>}
 
+      {/* 開設／編輯課程表單：編輯時載入 initial、可取消 */}
       <div className="mb-6">
         <h2 className="mb-2 text-sm font-semibold text-gray-600">
           {editing ? `編輯課程 ${editing.course_name}` : '開設新課程'}

@@ -2784,7 +2784,7 @@ Let me write v0.3.md.
 **Input:**
 ```json
 {
-  "content": "# NQU-ERP v0.3 Release Notes\n\n## 版本概述\n\n金門大學校務系統 MVP v0.3，實作**教師端與管理員端** React 介面。本版本建立在 v0.2 學生端之上，補齊教師成績登錄與管理員帳號/課程管理流程，並新增對應後端 API。\n\n## 後端新增 API（本版本必須）\n\n| Method | Path | 角色 | 說明 |\n|--------|------|------|------|\n| GET | `/api/v1/teachers/me/courses/{course_id}/students` | Teacher | 授課課程選課學生名冊（含成績與送交狀態） |\n| GET | `/api/v1/admin/users` | Admin | 帳號列表（含科系名稱） |\n| GET | `/api/v1/admin/teachers` | Admin | 教師列表（供開課程式選授課教師） |\n| GET | `/api/v1/admin/departments` | Admin | 科系列表（供表單下拉） |\n\n權限防護：名冊僅限授課教師本人（`teacher_id != auth.user_id → 403`）；列表 API 僅限 Admin（Student → 403）。\n\n## 功能清單\n\n### 教師端\n\n| 功能 | 頁面 | 串接 API |\n|------|------|----------|\n| 授課清單 | `TeacherCourses.tsx` | `GET /api/v1/teachers/me/courses` |\n| 學生名冊 + 成績登錄 | `TeacherGradeEntry.tsx` | `GET .../students` + `PUT /api/v1/grades/batch` |\n| 成績鎖定送交（含確認對話框） | `TeacherGradeEntry.tsx` | `POST /api/v1/grades/submit` |\n\n### 管理員端\n\n| 功能 | 頁面 | 串接 API |\n|------|------|----------|\n| 帳號列表 / 搜尋 / 新增 | `AdminUsers.tsx` | `GET/POST /api/v1/admin/users`、`GET /admin/departments` |\n| 課程列表 / 開設新課程 | `AdminCourses.tsx` | `GET /api/v1/courses`、`POST /admin/courses`、`GET /admin/teachers` |\n\n## 登入角色導向\n\nv0.2 教師/管理員登入會被拒絕，v0.3 起依角色導向：\n\n- STUDENT → `/courses`（課程瀏覽）\n- TEACHER → `/teacher/courses`（授課清單）\n- ADMIN → `/admin/users`（帳號管理）\n\n`PrivateRoute` 支援 `roles` 屬性，角色不符時導向該角色首頁（`ROLE_HOME` in `src/roles.ts`）。\n\n## 前端元件\n\n| 元件 | 說明 |\n|------|------|\n| `RosterTable.tsx` | 成績登錄表格：期中/期末輸入、未送交可編輯、已送交禁用、`toDrafts()` 轉 DraftGrade |\n| `UserForm.tsx` | 帳號表單（角色/科系下拉） |\n| `CourseForm.tsx` | 開課表單（科系/教師下拉） |\n\n## 測試\n\n```bash\nbash test.sh              # 後端 48 tests（新增 roster / admin 列表 / 開課 / 權限 15 項）\n\ncd frontend\nbash test.sh              # Vitest 24 + Playwright E2E 10\nnpm test                  # 僅 Vitest（jsdom）\nnpx playwright test       # 僅 E2E\n```\n\nE2E 新增「教師端」（登錄成績→確認對話框→鎖定送交後輸入框禁用）與「管理員端」（新增帳號+搜尋、開設新課程）兩段描述，共 3 個測試。\n\n### 已知 E2E 陷阱（v0.3 新增）\n\n- `page.addInitScript` 會在**每次** `page.goto` 時重跑並清空 `localStorage` → 會把已登入使用者登出。改用 `beforeEach` 先 `goto('/login')` 再 `evaluate(() => localStorage.clear())`，僅清一次。\n- `getByText`/`getByRole('cell')` 的 name 匹配不區分大小寫且為 substring：`T001` 會同時命中 `t001@nqu.edu.tw` → 需 `exact: true`；`getByPlaceholder('姓名')` 會命中「搜尋帳號 / 姓名 / 角色」→ 需 `exact: true`。\n\n## 已知限制\n\n- 管理員「選課時程管理（enrollment-period）」API 尚未實作（v0.4）\n- 開課僅建立課程本體，尚未支援時段（class_schedules）設定\n- 教師端無課表頁（v0.4 視需求）",
+  "content": "# NQU-ERP v0.3 Release Notes\n\n## 版本概述\n\n校務系統校務系統 MVP v0.3，實作**教師端與管理員端** React 介面。本版本建立在 v0.2 學生端之上，補齊教師成績登錄與管理員帳號/課程管理流程，並新增對應後端 API。\n\n## 後端新增 API（本版本必須）\n\n| Method | Path | 角色 | 說明 |\n|--------|------|------|------|\n| GET | `/api/v1/teachers/me/courses/{course_id}/students` | Teacher | 授課課程選課學生名冊（含成績與送交狀態） |\n| GET | `/api/v1/admin/users` | Admin | 帳號列表（含科系名稱） |\n| GET | `/api/v1/admin/teachers` | Admin | 教師列表（供開課程式選授課教師） |\n| GET | `/api/v1/admin/departments` | Admin | 科系列表（供表單下拉） |\n\n權限防護：名冊僅限授課教師本人（`teacher_id != auth.user_id → 403`）；列表 API 僅限 Admin（Student → 403）。\n\n## 功能清單\n\n### 教師端\n\n| 功能 | 頁面 | 串接 API |\n|------|------|----------|\n| 授課清單 | `TeacherCourses.tsx` | `GET /api/v1/teachers/me/courses` |\n| 學生名冊 + 成績登錄 | `TeacherGradeEntry.tsx` | `GET .../students` + `PUT /api/v1/grades/batch` |\n| 成績鎖定送交（含確認對話框） | `TeacherGradeEntry.tsx` | `POST /api/v1/grades/submit` |\n\n### 管理員端\n\n| 功能 | 頁面 | 串接 API |\n|------|------|----------|\n| 帳號列表 / 搜尋 / 新增 | `AdminUsers.tsx` | `GET/POST /api/v1/admin/users`、`GET /admin/departments` |\n| 課程列表 / 開設新課程 | `AdminCourses.tsx` | `GET /api/v1/courses`、`POST /admin/courses`、`GET /admin/teachers` |\n\n## 登入角色導向\n\nv0.2 教師/管理員登入會被拒絕，v0.3 起依角色導向：\n\n- STUDENT → `/courses`（課程瀏覽）\n- TEACHER → `/teacher/courses`（授課清單）\n- ADMIN → `/admin/users`（帳號管理）\n\n`PrivateRoute` 支援 `roles` 屬性，角色不符時導向該角色首頁（`ROLE_HOME` in `src/roles.ts`）。\n\n## 前端元件\n\n| 元件 | 說明 |\n|------|------|\n| `RosterTable.tsx` | 成績登錄表格：期中/期末輸入、未送交可編輯、已送交禁用、`toDrafts()` 轉 DraftGrade |\n| `UserForm.tsx` | 帳號表單（角色/科系下拉） |\n| `CourseForm.tsx` | 開課表單（科系/教師下拉） |\n\n## 測試\n\n```bash\nbash test.sh              # 後端 48 tests（新增 roster / admin 列表 / 開課 / 權限 15 項）\n\ncd frontend\nbash test.sh              # Vitest 24 + Playwright E2E 10\nnpm test                  # 僅 Vitest（jsdom）\nnpx playwright test       # 僅 E2E\n```\n\nE2E 新增「教師端」（登錄成績→確認對話框→鎖定送交後輸入框禁用）與「管理員端」（新增帳號+搜尋、開設新課程）兩段描述，共 3 個測試。\n\n### 已知 E2E 陷阱（v0.3 新增）\n\n- `page.addInitScript` 會在**每次** `page.goto` 時重跑並清空 `localStorage` → 會把已登入使用者登出。改用 `beforeEach` 先 `goto('/login')` 再 `evaluate(() => localStorage.clear())`，僅清一次。\n- `getByText`/`getByRole('cell')` 的 name 匹配不區分大小寫且為 substring：`T001` 會同時命中 `t001@nqu.edu.tw` → 需 `exact: true`；`getByPlaceholder('姓名')` 會命中「搜尋帳號 / 姓名 / 角色」→ 需 `exact: true`。\n\n## 已知限制\n\n- 管理員「選課時程管理（enrollment-period）」API 尚未實作（v0.4）\n- 開課僅建立課程本體，尚未支援時段（class_schedules）設定\n- 教師端無課表頁（v0.4 視需求）",
   "filePath": "/Users/Shared/ccc/115a/_se115a/homework/hw2-nqu-erp/_doc/v0.3.md"
 }
 ```
@@ -2941,7 +2941,7 @@ Continue: update AGENTS.md and plan.md, then finish with summary + ask about com
 2: 
 3: ## 專案概述
 4: 
-5: 金門大學校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。
+5: 校務系統校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。
 6: 
 7: ## Build & Run
 8: 
@@ -3105,8 +3105,8 @@ Continue: update AGENTS.md and plan.md, then finish with summary + ask about com
 ```json
 {
   "filePath": "/Users/Shared/ccc/115a/_se115a/homework/hw2-nqu-erp/AGENTS.md",
-  "oldString": "金門大學校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。",
-  "newString": "金門大學校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。v0.3 起涵蓋學生 / 教師 / 管理員三角色前端。"
+  "oldString": "校務系統校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。",
+  "newString": "校務系統校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。v0.3 起涵蓋學生 / 教師 / 管理員三角色前端。"
 }
 ```
 
@@ -3217,11 +3217,11 @@ Now update plan.md. Let me read the relevant parts of plan.md.
 <path>/Users/Shared/ccc/115a/_se115a/homework/hw2-nqu-erp/_doc/plan.md</path>
 <type>file</type>
 <content>
-1: # 金門大學校務系統 MVP 實作規劃
+1: # 校務系統校務系統 MVP 實作規劃
 2: 
 3: ## 系統概述
 4: 
-5: 金門大學（NQU）校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
+5: 通用校務系統校務系統 MVP，聚焦「選課與成績管理」核心流程，服務學生、教師與教務處三類使用者。
 6: 
 7: ## 技術堆疊
 8: 

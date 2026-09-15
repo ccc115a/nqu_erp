@@ -1,8 +1,10 @@
+// WeeklySchedule 元件單元測試：星期表頭、課程區塊、節次數字、空狀態。
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import WeeklySchedule from '../components/WeeklySchedule'
 import type { ScheduleItem } from '../types'
 
+// 兩筆分屬不同星期／節次的假課表
 const items: ScheduleItem[] = [
   {
     course_code: 'CSIE301',

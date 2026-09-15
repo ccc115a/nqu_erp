@@ -1,3 +1,5 @@
+//! Migration 0002：建立使用者（users）表。
+
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::pk_auto;
 
@@ -6,6 +8,7 @@ pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    /// 建立表格：帳號／email 唯一、密碼只存雜湊、created_at 預設目前時間
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -20,6 +23,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Users::DeptId).integer())
                     .col(ColumnDef::new(Users::Email).string().not_null().unique_key())
                     .col(ColumnDef::new(Users::CreatedAt).timestamp().default(Expr::current_timestamp()))
+                    // 外鍵：使用者隸屬某科系
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_users_dept")
@@ -31,6 +35,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
+    /// 反向：刪除表格
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_table(Table::drop().table(Users::Table).to_owned())

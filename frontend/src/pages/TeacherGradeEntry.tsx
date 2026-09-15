@@ -1,3 +1,4 @@
+// 教師成績登錄頁：批次儲存分數、送交前以對話框二次確認。
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, getErrorMessage } from '../api/client'
@@ -14,6 +15,7 @@ export default function TeacherGradeEntry() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
 
+  // 載入該課程的名冊
   const load = async () => {
     const res = await api.get<RosterItem[]>(`/teachers/me/courses/${courseId}/students`)
     setRoster(res.data)
@@ -26,9 +28,11 @@ export default function TeacherGradeEntry() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId])
 
+  // 批次儲存草稿成績
   const save = async () => {
     setError('')
     setInfo('')
+    // 沒有輸入任何草稿就不送
     if (drafts.length === 0) {
       setError('請先輸入要儲存的成績')
       return
@@ -49,6 +53,7 @@ export default function TeacherGradeEntry() {
     }
   }
 
+  // 鎖定送交（不可再改）
   const submit = async () => {
     setConfirmOpen(false)
     setError('')
@@ -83,6 +88,7 @@ export default function TeacherGradeEntry() {
           >
             {saving ? '處理中...' : '儲存成績'}
           </button>
+          {/* 送交前需先經過確認對話框 */}
           <button
             className="rounded bg-amber-500 px-4 py-2 text-white hover:bg-amber-400 disabled:opacity-50"
             onClick={() => setConfirmOpen(true)}
@@ -96,6 +102,7 @@ export default function TeacherGradeEntry() {
       {info && <p className="mb-4 rounded bg-green-50 px-3 py-2 text-sm text-green-700">{info}</p>}
       <RosterTable roster={roster} onDraftChange={setDrafts} />
 
+      {/* 鎖定送交確認對話框 */}
       {confirmOpen && (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/40" onClick={() => setConfirmOpen(false)}>
           <div className="w-96 rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>

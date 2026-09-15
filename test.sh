@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 後端 API 整合測試：建置 → 啟動 server → 匯入假資料 → 逐一驗證所有 API，最後統計通過/失敗。
 set -euo pipefail
 
 BASE="http://localhost:8080"

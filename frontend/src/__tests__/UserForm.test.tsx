@@ -1,8 +1,10 @@
+// UserForm 元件單元測試：角色／科系下拉、新增送出、送出中狀態、編輯模式鎖定學號。
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import UserForm, { type UserFormValues } from '../components/UserForm'
 import type { Department } from '../types'
 
+// 假的科系資料
 const departments: Department[] = [
   { dept_id: 1, dept_code: 'CSIE', dept_name: '資訊工程學系' },
   { dept_id: 2, dept_code: 'EE', dept_name: '電機工程學系' },
@@ -19,6 +21,7 @@ describe('UserForm', () => {
     const onSubmit = vi.fn()
     render(<UserForm departments={departments} onSubmit={onSubmit} />)
 
+    // 填入帳號等欄位後送出，role 與 dept 應取目前選取值
     fireEvent.change(screen.getByPlaceholderText('學號 / 帳號'), { target: { value: 'S100' } })
     fireEvent.change(screen.getByPlaceholderText('姓名'), { target: { value: '測試人員' } })
     fireEvent.change(screen.getByPlaceholderText('密碼'), { target: { value: 'pw1234' } })
@@ -48,6 +51,7 @@ describe('UserForm', () => {
       />,
     )
 
+    // 編輯模式：按鈕為「儲存修改」，學號輸入框應被鎖定並預填初始值
     expect(screen.getByRole('button', { name: '儲存修改' })).toBeInTheDocument()
     const usernameInput = screen.getByPlaceholderText('學號 / 帳號') as HTMLInputElement
     expect(usernameInput).toBeDisabled()

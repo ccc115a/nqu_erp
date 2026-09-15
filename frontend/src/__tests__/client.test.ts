@@ -1,9 +1,11 @@
+// getErrorMessage 工具函式單元測試：取得後端錯誤訊息與後備訊息。
 import { AxiosError, AxiosHeaders } from 'axios'
 import { describe, expect, it } from 'vitest'
 import { getErrorMessage } from '../api/client'
 
 describe('getErrorMessage', () => {
   it('extracts Chinese error message from backend response', () => {
+    // 模擬後端回傳 { error: '中文訊息' } 的 AxiosError
     const err = new AxiosError(
       'Request failed',
       'ERR_BAD_REQUEST',

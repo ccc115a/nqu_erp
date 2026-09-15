@@ -1,3 +1,5 @@
+//! Migration 0004：建立上課時間表（class_schedules），課程刪除時級聯清除。
+
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::pk_auto;
 
@@ -6,6 +8,7 @@ pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    /// 建立表格：外鍵設定 ON DELETE CASCADE，讓刪課程一併清掉時段
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -29,6 +32,7 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        // 依課程查時段是頻繁路徑，建立索引
         manager
             .create_index(
                 Index::create()
@@ -40,6 +44,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
+    /// 反向：先刪索引再刪表
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_index(Index::drop().name("idx_schedules_course").to_owned())

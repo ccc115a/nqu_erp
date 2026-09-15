@@ -1,3 +1,5 @@
+//! 資料庫 migration：依序建立六張核心資料表。
+
 use sea_orm_migration::prelude::*;
 
 mod m20240101_000001_create_departments;
@@ -11,6 +13,7 @@ pub struct Migrator;
 
 #[async_trait::async_trait]
 impl MigratorTrait for Migrator {
+    /// Migration 執行順序（後者依賴前者的表格與外鍵）
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
             Box::new(m20240101_000001_create_departments::Migration),

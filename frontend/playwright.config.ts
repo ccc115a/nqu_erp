@@ -1,3 +1,5 @@
+// Playwright E2E 設定：指定測試目錄、單執行緒執行，並自動啟動前端 dev server。
+
 import { defineConfig } from '@playwright/test'
 
 export default defineConfig({

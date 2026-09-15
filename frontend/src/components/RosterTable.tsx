@@ -1,6 +1,9 @@
+// 教師名冊表格元件：每列含期中/期末輸入框，已送交者鎖定，
+// 輸入變更時透過 onDraftChange 回傳草稿成績。
 import { useState } from 'react'
 import type { RosterItem } from '../types'
 
+// 一筆待儲存的成績草稿（留空的欄位沿用原值）
 export interface DraftGrade {
   enrollment_id: number
   midterm_score: number | null
@@ -13,6 +16,7 @@ interface Props {
 }
 
 export default function RosterTable({ roster, onDraftChange }: Props) {
+  // 草稿以字串形式暫存，鍵為 `${enrollment_id}:${midterm|final}`
   const [drafts, setDrafts] = useState<Record<string, string>>({})
 
   const handleChange = (enrollmentId: number, field: 'midterm' | 'final', value: string) => {
@@ -41,6 +45,7 @@ export default function RosterTable({ roster, onDraftChange }: Props) {
             <td className="border border-gray-300 px-3 py-2">{r.student_number}</td>
             <td className="border border-gray-300 px-3 py-2">{r.full_name}</td>
             <td className="border border-gray-300 px-3 py-2">
+              {/* 已送交的成績不可再編輯 */}
               <input
                 className="w-20 rounded border px-2 py-1 text-sm"
                 type="number"
@@ -83,6 +88,8 @@ export default function RosterTable({ roster, onDraftChange }: Props) {
   )
 }
 
+// 將草稿物件轉成批次儲存用的 DraftGrade 陣列：
+// 會跳過已送交與完全留空的列；只改一半欄位時沿用該列的原始值。
 export function toDrafts(roster: RosterItem[], drafts: Record<string, string>): DraftGrade[] {
   return roster
     .filter((r) => !r.is_submitted)

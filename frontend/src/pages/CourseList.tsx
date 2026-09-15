@@ -1,15 +1,18 @@
+// 學生課程瀏覽頁：顯示課程清單、支援名稱搜尋、加選／退選。
 import { useEffect, useMemo, useState } from 'react'
 import { api, getErrorMessage } from '../api/client'
 import type { ApiMessage, Course, ScheduleItem } from '../types'
 
 export default function CourseList() {
   const [courses, setCourses] = useState<Course[]>([])
+  // 目前已選課程的課號集合（來自個人課表）
   const [enrolled, setEnrolled] = useState<Set<string>>(new Set())
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
 
+  // 同時重新抓取課程清單與自己的課表，用來判斷每個課程的加退選狀態
   const refresh = async () => {
     const [courseRes, scheduleRes] = await Promise.all([
       api.get<Course[]>('/courses'),
@@ -25,12 +28,14 @@ export default function CourseList() {
       .finally(() => setLoading(false))
   }, [])
 
+  // 依名稱做前端篩選
   const filtered = useMemo(() => {
     const q = search.trim()
     if (!q) return courses
     return courses.filter((c) => c.course_name.includes(q))
   }, [courses, search])
 
+  // 加選：成功顯示綠訊息，失敗（衝突／額滿）顯示紅訊息
   const enroll = async (course: Course) => {
     setError('')
     setInfo('')
@@ -44,6 +49,7 @@ export default function CourseList() {
     }
   }
 
+  // 退選
   const drop = async (course: Course) => {
     setError('')
     setInfo('')
@@ -74,6 +80,7 @@ export default function CourseList() {
       {info && <p className="mb-4 rounded bg-green-50 px-3 py-2 text-sm text-green-700">{info}</p>}
       <div className="space-y-3">
         {filtered.map((c) => {
+          // 已選 → 顯示退選鈕；未選且額滿 → 停用加選鈕
           const isEnrolled = enrolled.has(c.course_code)
           const full = c.enrolled_count >= c.capacity
           return (

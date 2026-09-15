@@ -2,7 +2,7 @@
 
 ## 專案概述
 
-金門大學校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。v0.3 起涵蓋學生 / 教師 / 管理員三角色前端。
+通用校務系統 MVP（NQU-ERP），聚焦選課與成績管理。Backend Rust (Axum + SeaORM)，前端 React + TailwindCSS（v0.2 起）。v0.3 起涵蓋學生 / 教師 / 管理員三角色前端。
 
 ## Build & Run
 

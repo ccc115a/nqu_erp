@@ -1,8 +1,11 @@
+// RosterTable 元件與 toDrafts 純函式單元測試：
+// 名冊渲染、已送交列鎖定輸入、成績草稿收集與過濾。
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import RosterTable, { toDrafts } from '../components/RosterTable'
 import type { RosterItem } from '../types'
 
+// 假名冊：一人已送交、一人未送交
 const roster: RosterItem[] = [
   {
     enrollment_id: 1,
