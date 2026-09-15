@@ -11,6 +11,8 @@ pub struct Config {
     pub jwt_secret: String,
     /// HTTP server 監聽位址，例如 `0.0.0.0:8080`
     pub server_addr: String,
+    /// CORS 允許的來源，缺省為前端 dev server；設為 `*` 表示全部放行（docker 同源部署用）
+    pub cors_origin: String,
 }
 
 impl Config {
@@ -25,6 +27,7 @@ impl Config {
             jwt_secret: env::var("JWT_SECRET")
                 .unwrap_or_else(|_| "nqu-erp-secret-key-change-in-production".into()),
             server_addr: env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".into()),
+            cors_origin: env::var("CORS_ORIGIN").unwrap_or_else(|_| "http://localhost:5173".into()),
         }
     }
 }

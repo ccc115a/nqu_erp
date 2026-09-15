@@ -22,7 +22,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Users::Role).string().not_null())
                     .col(ColumnDef::new(Users::DeptId).integer())
                     .col(ColumnDef::new(Users::Email).string().not_null().unique_key())
-                    .col(ColumnDef::new(Users::CreatedAt).timestamp().default(Expr::current_timestamp()))
+                    .col(ColumnDef::new(Users::CreatedAt).timestamp_with_time_zone().default(Expr::current_timestamp()))
                     // 外鍵：使用者隸屬某科系
                     .foreign_key(
                         ForeignKey::create()

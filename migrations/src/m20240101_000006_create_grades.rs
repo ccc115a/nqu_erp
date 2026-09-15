@@ -17,11 +17,11 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Grades::GradeId))
                     .col(ColumnDef::new(Grades::EnrollmentId).integer().not_null().unique_key())
-                    .col(ColumnDef::new(Grades::MidtermScore).float())
-                    .col(ColumnDef::new(Grades::FinalScore).float())
-                    .col(ColumnDef::new(Grades::TotalScore).float())
+                    .col(ColumnDef::new(Grades::MidtermScore).double())
+                    .col(ColumnDef::new(Grades::FinalScore).double())
+                    .col(ColumnDef::new(Grades::TotalScore).double())
                     .col(ColumnDef::new(Grades::IsSubmitted).boolean().default(false))
-                    .col(ColumnDef::new(Grades::UpdatedAt).timestamp().default(Expr::current_timestamp()))
+                    .col(ColumnDef::new(Grades::UpdatedAt).timestamp_with_time_zone().default(Expr::current_timestamp()))
                     // 外鍵：退選刪掉選課紀錄時一併刪成績
                     .foreign_key(
                         ForeignKey::create()

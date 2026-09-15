@@ -6,9 +6,10 @@ import type { LoginResponse } from '../types'
 export const TOKEN_KEY = 'nqu_token'
 export const USER_KEY = 'nqu_user'
 
-// 共用 axios 實例：後端 API 前綴
+// 共用 axios 實例：後端 API 前綴（VITE_API_BASE 可在 .env 或 docker build ARG 設定，
+// 缺省為本機 dev server 位址）
 export const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE ?? 'http://localhost:8080/api/v1',
 })
 
 // 請求攔截：若有 token 自動加上 Authorization 標頭

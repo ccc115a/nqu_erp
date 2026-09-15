@@ -1,0 +1,11 @@
+# 建置 context 排除項：避免把本機開發產物/敏感檔案複製進 Docker image
+target/
+dev.db
+.env
+.git
+_doc
+frontend/node_modules
+frontend/dist
+frontend/test-results
+frontend/playwright-report
+scripts/seed.sql

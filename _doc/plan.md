@@ -435,11 +435,27 @@ nqu-erp/
 - Playwright E2E 10（新增教師成績流程 + 管理員流程）
 - `_doc/v0.3.md` 版本說明
 
-**待 v0.4：** 開課時段（class_schedules）設定、選課時程管理（api: enrollment-period）
+**待 v0.5：** 開課時段（class_schedules）設定、選課時程管理（api: enrollment-period）
 
 ---
 
-### v0.4 — Polish & Export
+### v0.4 — Docker 部署
+
+> 讓整個系統可部署在 Docker 上（前端 + 後端 + PostgreSQL），一鍵啟動
+
+**功能：**
+- 後端 `Dockerfile`：多階段建置（builder → runtime slim），release binary + healthcheck
+- 前端 `Dockerfile` + `nginx.conf`：Vite 建置 → nginx 靜態服務 + `/api` 反向代理（同源，免 CORS）
+- `docker-compose.yml`：`db`（PostgreSQL + pgdata volume）、`api`、`web`、`seed` 四服務，含 healthcheck 相依
+- 設定調整：前端 API base 改由 `VITE_API_BASE` 設定；後端 CORS origin 走 `CORS_ORIGIN` 環境變數
+- 部署驗證（`docker compose up` → seed → 全部功能可操作）
+- `_doc/v0.4.md` 版本說明
+
+**待 v0.5：** 開課時段（class_schedules）設定、選課時程管理（api: enrollment-period）
+
+---
+
+### v0.5 — Polish & Export
 
 > 體驗優化、匯出功能、管理功能完善
 
@@ -452,7 +468,7 @@ nqu-erp/
 
 ---
 
-### v0.5 — Performance & Robustness
+### v0.6 — Performance & Robustness
 
 > 效能最佳化、壓力測試、安全性加強
 
@@ -549,8 +565,8 @@ curl -X POST http://localhost:8080/api/v1/grades/submit \
 - Seed 資料在 server 啟動後插入，需確保同一 SQLite file
 - `enrolled_count` 在加選/退選時更新，但未用 DB-level atomic update (改用 SeaORM model update)
 - 成績鎖定後無法解鎖（正式系統需加入 rollback 機制）
-- 未實作 admin/enrollment-period API (設定期末加退選時程) → v0.4
-- 開課尚不支援時段（class_schedules）設定 → v0.4
+- 未實作 admin/enrollment-period API (設定期末加退選時程) → v0.5
+- 開課尚不支援時段（class_schedules）設定 → v0.5
 
 ## 效能目標
 

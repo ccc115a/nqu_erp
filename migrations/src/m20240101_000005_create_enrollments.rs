@@ -21,7 +21,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Enrollments::StudentId).integer().not_null())
                     .col(ColumnDef::new(Enrollments::CourseId).integer().not_null())
                     .col(ColumnDef::new(Enrollments::Status).string().not_null().default("ENROLLED"))
-                    .col(ColumnDef::new(Enrollments::CreatedAt).timestamp().default(Expr::current_timestamp()))
+                    .col(ColumnDef::new(Enrollments::CreatedAt).timestamp_with_time_zone().default(Expr::current_timestamp()))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_enrollments_student")

@@ -48,11 +48,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         jwt_secret: config.jwt_secret.clone(),
     };
 
-    // CORS：僅允許前端 dev server（http://localhost:5173）跨來源呼叫
-    let cors = CorsLayer::new()
-        .allow_origin(HeaderValue::from_static("http://localhost:5173"))
-        .allow_methods(Any)
-        .allow_headers(Any);
+    // CORS：依設定允許跨來源呼叫。缺省開放前端 dev server；設為 `*` 則全部放行（docker 同源部署用）
+    let cors_origin = config.cors_origin.clone();
+    let cors = if cors_origin == "*" {
+        CorsLayer::new()
+            .allow_origin(Any)
+            .allow_methods(Any)
+            .allow_headers(Any)
+    } else {
+        let origin = HeaderValue::from_str(&cors_origin)
+            .unwrap_or(HeaderValue::from_static("http://localhost:5173"));
+        CorsLayer::new()
+            .allow_origin(origin)
+            .allow_methods(Any)
+            .allow_headers(Any)
+    };
 
     // 路由表：集中定義所有 API 端點與對應的 handler
     let app = Router::new()

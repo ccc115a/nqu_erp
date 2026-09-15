@@ -14,7 +14,13 @@ cargo run                            # 啟動 server（自動跑 migration）
 
 # Frontend
 cd frontend && npm install && npm run dev   # http://localhost:5173
+
+# Docker (v0.4) — db(PostgreSQL) + api(Rust) + web(nginx 同源) + seed(一次性)
+bash docker_test.sh                         # 建置→啟動→seed→23 項整合測試；全過保留 stack 上線
+bash docker_test.sh --down                  # 收尾關閉 stack
+docker compose --profile seed run --rm seed # 重新喂入假資料（一次性；seed 掛 profile 不會被 up 自動跑）
 ```
+
 
 品質關卡（提交前必須全過）：
 
@@ -157,4 +163,4 @@ sqlite3 dev.db < scripts/seed.sql                    # 重置資料一鍵指令
 
 ## 當前版本
 
-v0.3.1 完成（Admin 修改/刪除帳號與課程）。規劃上 v0.4 為選課時程管理 enrollment-period。詳見 `_doc/plan.md` 與 `_doc/v0.3.1.md`。
+v0.3.1 完成（Admin 修改/刪除帳號與課程）。規劃上 v0.4 為 Docker 部署，v0.5 為選課時程管理 enrollment-period。詳見 `_doc/plan.md` 與 `_doc/v0.4.md`。
