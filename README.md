@@ -1,6 +1,6 @@
 # NQU-ERP 校務系統
 
-通用校務系統 MVP，聚焦**選課與成績管理**核心流程，涵蓋學生 / 教師 / 管理員三角色。目前版本 **v0.4**（Docker 部署：PostgreSQL + nginx 同源，可一鍵上線）。
+通用校務系統 MVP，聚焦**選課與成績管理**核心流程，涵蓋學生 / 教師 / 管理員三角色。目前版本 **v0.5**（CI/CD：GitHub Actions 自動跑 fmt/clippy/測試 131＋Docker 23 整合，main 自動建置並推送 GHCR 映像）。
 
 ## 技術堆疊
 
@@ -121,7 +121,8 @@ frontend/
 ├── src/components/      # Navbar / PrivateRoute / WeeklySchedule / GradeTable / RosterTable / UserForm / CourseForm
 ├── src/__tests__/       # Vitest 單元測試
 └── e2e/                 # Playwright E2E
-_doc/                    # plan.md + 各版本說明（v0.1 / v0.2 / v0.3 / v0.3.1 / v0.4）
+_doc/                    # plan.md + 各版本說明（v0.1 / v0.2 / v0.3 / v0.3.1 / v0.4 / v0.5）
+.github/workflows/       # ci.yml（CI）+ cd.yml（CD push main→GHCR）
 ```
 
 詳細規畫與 API 設計見 `_doc/plan.md`，版本說明見各 `_doc/vX.Y.md`。

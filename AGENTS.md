@@ -163,4 +163,4 @@ sqlite3 dev.db < scripts/seed.sql                    # 重置資料一鍵指令
 
 ## 當前版本
 
-v0.3.1 完成（Admin 修改/刪除帳號與課程）。規劃上 v0.4 為 Docker 部署，v0.5 為選課時程管理 enrollment-period。詳見 `_doc/plan.md` 與 `_doc/v0.4.md`。
+v0.3.1 完成（Admin 修改/刪除帳號與課程）；v0.4 完成（Docker 部署）。規劃上 v0.5 為 CI/CD（GitHub Actions ci.yml + cd.yml，GHCR 映像）。詳見 `_doc/plan.md`、`_doc/v0.4.md`、`_doc/v0.5.md`。

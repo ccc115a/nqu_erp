@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: 後端（fmt / clippy / build / test 72）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: fmt
+        run: cargo fmt --check
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: build
+        run: cargo build
+      - name: 整合測試（test.sh：build→seed→72 項）
+        run: bash test.sh
+
+  frontend:
+    name: 前端（Vitest 26 + Playwright E2E 10）
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: install deps
+        run: npm ci
+      - name: Vitest 單元測試（jsdom）
+        run: npx vitest run
+      - name: install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: E2E（前端 test.sh）
+        run: bash test.sh
+
+  docker:
+    name: Docker（docker_test.sh 23 項）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 建置 + 啟動 + seed + 23 項整合測試
+        run: bash docker_test.sh
