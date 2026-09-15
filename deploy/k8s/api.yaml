@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nqu-erp-api
+  namespace: nqu-erp
+  labels:
+    app: nqu-erp
+    tier: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nqu-erp
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: nqu-erp
+        tier: api
+    spec:
+      containers:
+        - name: api
+          image: nqu_erp-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              value: "sqlite:///data/nqu.db?mode=rwc"
+            - name: RUST_LOG
+              value: "info"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nqu-erp-api
+  namespace: nqu-erp
+  labels:
+    app: nqu-erp
+    tier: api
+spec:
+  selector:
+    app: nqu-erp
+    tier: api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nqu-erp

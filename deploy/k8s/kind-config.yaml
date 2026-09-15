@@ -1,0 +1,16 @@
+# kind-config.yaml — v2.0「本機長出真 k8s」用的單機偽多節點
+# 對齊 _doc/plan2.md v2.0 里程碑：判準表第一列「主機數 ≥ 2」親手轉真
+# 三個 node：1 control-plane + 2 worker（用同一個 host docker，無 VM 層）
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: nqu-erp
+
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 80        # ingress 入口（對齊 docker_run.sh 的 WEB_PORT 哲學）
+        hostPort: 8081
+        protocol: TCP
+  - role: worker
+  - role: worker
