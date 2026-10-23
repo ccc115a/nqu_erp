@@ -136,3 +136,80 @@ impl FromRequestParts<AppState> for AuthUser {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SECRET: &str = "test-secret";
+
+    #[test]
+    fn create_and_decode_token_roundtrip() {
+        let token = create_token(42, "11303001", "STUDENT", SECRET).unwrap();
+        let claims = decode_token(&token, SECRET).unwrap();
+
+        assert_eq!(claims.sub, 42);
+        assert_eq!(claims.username, "11303001");
+        assert_eq!(claims.role, "STUDENT");
+    }
+
+    #[test]
+    fn decode_token_with_wrong_secret_fails() {
+        let token = create_token(1, "admin", "ADMIN", SECRET).unwrap();
+        assert!(decode_token(&token, "other-secret").is_err());
+    }
+
+    #[test]
+    fn decode_garbage_token_fails() {
+        assert!(decode_token("not-a-jwt", SECRET).is_err());
+    }
+
+    #[test]
+    fn expired_token_is_rejected() {
+        let claims = Claims {
+            sub: 1,
+            username: "user".into(),
+            role: "STUDENT".into(),
+            exp: 0,
+        };
+        // encode 會以簽發時間重算 exp，需用負時數產生已過期 token
+        let token = encode_with_duration(SECRET, &claims, -24).unwrap();
+        assert!(decode_token(&token, SECRET).is_err());
+    }
+
+    #[test]
+    fn encode_with_duration_sets_expiry() {
+        let claims = Claims {
+            sub: 7,
+            username: "t001".into(),
+            role: "TEACHER".into(),
+            exp: 0,
+        };
+        let token = encode_with_duration(SECRET, &claims, 1).unwrap();
+        let decoded = decode_token(&token, SECRET).unwrap();
+        assert!(decoded.exp > chrono::Utc::now().timestamp() as usize);
+    }
+
+    #[test]
+    fn role_helpers() {
+        let student = AuthUser {
+            user_id: 1,
+            username: "s".into(),
+            role: "STUDENT".into(),
+        };
+        let teacher = AuthUser {
+            user_id: 2,
+            username: "t".into(),
+            role: "TEACHER".into(),
+        };
+        let admin = AuthUser {
+            user_id: 3,
+            username: "a".into(),
+            role: "ADMIN".into(),
+        };
+
+        assert!(student.is_student() && !student.is_teacher() && !student.is_admin());
+        assert!(teacher.is_teacher() && !teacher.is_student() && !teacher.is_admin());
+        assert!(admin.is_admin() && !admin.is_student() && !admin.is_teacher());
+    }
+}

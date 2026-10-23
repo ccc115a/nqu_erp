@@ -75,3 +75,58 @@ impl From<jsonwebtoken::errors::Error> for AppError {
         Self::unauthorized(format!("JWT 錯誤: {}", err))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use http_body_util::BodyExt;
+
+    async fn body_json(response: Response) -> serde_json::Value {
+        let bytes = response
+            .into_body()
+            .collect()
+            .await
+            .expect("collect body")
+            .to_bytes();
+        serde_json::from_slice(&bytes).expect("invalid json body")
+    }
+
+    #[tokio::test]
+    async fn builder_sets_expected_status() {
+        assert_eq!(AppError::bad_request("x").status, StatusCode::BAD_REQUEST);
+        assert_eq!(AppError::unauthorized("x").status, StatusCode::UNAUTHORIZED);
+        assert_eq!(AppError::forbidden("x").status, StatusCode::FORBIDDEN);
+        assert_eq!(AppError::not_found("x").status, StatusCode::NOT_FOUND);
+        assert_eq!(AppError::conflict("x").status, StatusCode::CONFLICT);
+        assert_eq!(
+            AppError::internal("x").status,
+            StatusCode::INTERNAL_SERVER_ERROR
+        );
+    }
+
+    #[tokio::test]
+    async fn into_response_wraps_error_in_json_body() {
+        let response = AppError::bad_request("課程時間衝突！").into_response();
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        let json = body_json(response).await;
+        assert_eq!(json["error"], "課程時間衝突！");
+    }
+
+    #[tokio::test]
+    async fn db_error_becomes_internal_error() {
+        let err = AppError::from(sea_orm::DbErr::Custom("broken".to_owned()));
+
+        assert_eq!(err.status, StatusCode::INTERNAL_SERVER_ERROR);
+        assert_eq!(err.message, "資料庫錯誤");
+    }
+
+    #[tokio::test]
+    async fn jwt_error_becomes_unauthorized() {
+        let jwt_err = crate::middleware::auth::decode_token("garbage", "secret").unwrap_err();
+        let err = AppError::from(jwt_err);
+
+        assert_eq!(err.status, StatusCode::UNAUTHORIZED);
+        assert!(err.message.starts_with("JWT 錯誤"));
+    }
+}

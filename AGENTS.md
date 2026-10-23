@@ -33,7 +33,10 @@ cd frontend && bash test.sh
 
 ```bash
 bash test.sh                         # 後端整合測試（72 tests，含 build + server + seed + API）
-cargo test                           # Rust 單元測試（目前為空）
+itic
+cargo test                           # 單元測試（JWT / AppError / Config / 時間衝突判定）+ 系統測試（in-process Router + 暫存 SQLite，走完整的 HTTP 流程，原始碼內 #[cfg(test)]）
+cargo test --lib                     # 僅單元測試（各模組內 #[cfg(test)]）
+cargo test --test system_tests       # 僅系統（Web API）測試（tests/system_tests.rs）
 
 cd frontend
 bash test.sh                         # 前端自動化（build → seed → Vitest 26 → Playwright E2E 10）
@@ -73,7 +76,9 @@ SERVER_ADDR=0.0.0.0:8080
 ```
 nqu-erp/
 ├── src/
-│   ├── main.rs              # 啟動入口、Router 設定、AppState
+│   ├── main.rs              # 啟動入口（建 DB、migration、CORS、listen）
+│   ├── lib.rs               # library crate 進入點（main 與 tests 共用）
+│   ├── app.rs               # AppState + build_router（路由表集中處）
 │   ├── config.rs            # Config::from_env()（dotenvy）
 │   ├── db.rs                # establish_connection + run_migrations
 │   ├── errors.rs            # AppError（HTTP status + message）
@@ -96,6 +101,8 @@ nqu-erp/
 │       ├── mod.rs           # exports AuthUser, create_token
 │       └── auth.rs          # AuthUser extractor + JWT encode/decode
 ├── migrations/              # SeaORM migration（6 tables + 3 indexes）
+├── tests/
+│   └── system_tests.rs      # 系統整合（Web API）測試（in-process Router + 暫存 SQLite）
 ├── scripts/
 │   ├── seed.py              # Python 假資料產生器（bcrypt）
 │   └── seed.sql             # 產出的 SQL

@@ -30,6 +30,18 @@ pub struct DropRequest {
     pub course_id: i32,
 }
 
+/// 兩個上課時段是否衝突：同一天且節次範圍重疊（節次為閉區間）
+pub fn periods_conflict(
+    day_a: i32,
+    start_a: i32,
+    end_a: i32,
+    day_b: i32,
+    start_b: i32,
+    end_b: i32,
+) -> bool {
+    day_a == day_b && start_a <= end_b && start_b <= end_a
+}
+
 /// POST /api/v1/enrollments：學生加選課程
 ///
 /// 一連串檢查皆須通過才寫入：重複選課 → 時間衝突 → 名額是否額滿。
@@ -89,10 +101,14 @@ pub async fn enroll_course(
 
         for cs in &current_schedules {
             for ts in &target_schedules {
-                if cs.day_of_week == ts.day_of_week
-                    && cs.start_period <= ts.end_period
-                    && ts.start_period <= cs.end_period
-                {
+                if periods_conflict(
+                    cs.day_of_week,
+                    cs.start_period,
+                    cs.end_period,
+                    ts.day_of_week,
+                    ts.start_period,
+                    ts.end_period,
+                ) {
                     return Ok(Json(EnrollResponse {
                         success: false,
                         message: format!(
@@ -306,4 +322,31 @@ pub async fn get_student_schedule(
     });
 
     Ok(Json(items))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn same_day_overlapping_periods_conflict() {
+        // 1~3 節與 2~4 節重叠
+        assert!(periods_conflict(1, 1, 3, 1, 2, 4));
+        // 完全相同時段
+        assert!(periods_conflict(2, 5, 6, 2, 5, 6));
+        // 一門課包含在另一門課內
+        assert!(periods_conflict(3, 1, 8, 3, 3, 4));
+    }
+
+    #[test]
+    fn adjacent_periods_do_not_conflict() {
+        // 1~2 節上完緊接 3~4 節，節次不重叠
+        assert!(!periods_conflict(1, 1, 2, 1, 3, 4));
+        assert!(!periods_conflict(1, 3, 4, 1, 1, 2));
+    }
+
+    #[test]
+    fn different_days_do_not_conflict() {
+        assert!(!periods_conflict(1, 1, 4, 2, 1, 4));
+    }
 }
